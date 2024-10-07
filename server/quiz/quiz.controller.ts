@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { QuizService } from "./quiz.service";
 import { GetUser } from "../users/user.decorator";
 import { User } from "../users/users.service";
 import { QuizAnswer, QuizId } from "./quiz.types";
+import { AuthGuard } from "../auth/auth.guard";
 
+@UseGuards(AuthGuard)
 @Controller("user/quiz")
 export class QuizController {
   constructor(

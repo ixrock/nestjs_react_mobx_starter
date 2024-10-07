@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { createHash } from "crypto";
 
 export interface User {
-  username: string; // must be unique, hence could be used as user-ID
-  passwordHash?: string; // encrypted password
+  username: string; // unique, hence could be used as user-ID
+  password?: string; // encrypted password
 }
 
 @Injectable()
@@ -13,17 +13,14 @@ export class UsersService {
   private readonly users: User[] = [
     {
       username: "admin",
-      passwordHash: createHash("sha256").update("admin").digest("base64")
+      password: createHash("sha256").update("admin").digest("base64")
     }
   ];
 
-  verify(username: string, password: string): boolean {
+  // pretending this is async operation for real-world scenario
+  async verify(username: string, password: string): Promise<boolean> {
     const encodedPass = createHash("sha256").update(password).digest("base64");
 
-    return this.users.some(user => user.username === username && user.passwordHash === encodedPass);
-  }
-
-  findOne(username: string): User | undefined {
-    return this.users.find(user => user.username === username);
+    return this.users.some(user => user.username === username && user.password === encodedPass);
   }
 }
