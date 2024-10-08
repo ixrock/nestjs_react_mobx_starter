@@ -1,0 +1,11 @@
+:root {
+  --primary-red: #cc3928;
+  --black: #111927;
+  --gradient: linear-gradient(90deg, #965af8, #cc3928);
+  --gradient-bar-background: #e5e7eb;
+  --grey-background: #fafafb;
+  --question-container-grey: #f9fafb;
+  --icons-color: #6c737f;
+  --icons-background: #f3f4f6;
+  --icons-border: #e6e7e9;
+}

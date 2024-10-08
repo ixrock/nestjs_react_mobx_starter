@@ -1,0 +1,16 @@
+/* Project font(s) */
+
+@font-face {
+  font-family: "Inter";
+  src: url("./assets/fonts/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+  font-weight: 1 999;
+  font-stretch: 75% 125%;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./assets/fonts/Inter-Italic-VariableFont_opsz,wght.ttf") format("truetype");
+  font-weight: 1 999;
+  font-stretch: 75% 125%;
+  font-style: italic;
+}

@@ -1,0 +1,29 @@
+@import "../../fonts.css";
+@import "../../variables.css";
+
+*, *:before, *:after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  height: 100%;
+  font: 15px Inter, sans-serif;
+}
+
+input, select, textarea {
+  color: inherit;
+
+  &:invalid {
+    box-shadow: none;
+  }
+}
+
+/* generated div#app from main.tsx */
+:global(#app) {
+  height: 100%;
+}
