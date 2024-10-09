@@ -10,9 +10,13 @@ declare module "*.module.scss";
 //
 // Images
 //
-declare module "*.svg" {
+declare module "*.svg?inline" {
   const content: string;
   export = content; // base64 data-url, see also `webpack.config.ts`
+}
+declare module "*.svg" {
+  const content: string;
+  export = content; // bundled url path
 }
 declare module "*.jpg" {
   const content: string;

@@ -81,11 +81,12 @@ module.exports = function webpackConfig() {
          * Read more about asset types: https://webpack.js.org/guides/asset-modules/
          */
         {
+          resourceQuery: /inline/, // import "../Icon.svg?inline"
           test: /\.svg$/,
           type: "asset/inline" // data:image/svg+xml;base64,...
         },
         {
-          test: /\.(jpg|png|ico)$/,
+          test: /\.(jpg|png|ico|svg)$/,
           type: "asset/resource" // path to bundled file, e.g. "/assets/*"
         },
 
@@ -110,7 +111,7 @@ module.exports = function webpackConfig() {
     plugins: [
       new HtmlWebpackPlugin({
         title: "TalentAdore assignment",
-        inject: true,
+        inject: true
       }),
       new MiniCssExtractPlugin({ filename: "[name].css" })
     ]
