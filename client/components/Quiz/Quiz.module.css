@@ -1,5 +1,60 @@
-
-.QuizRender {
+.Quiz {
   display: flex;
   flex-direction: column;
+  gap: var(--margin);
+}
+
+.quizHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--margin);
+  border-bottom: 1px solid var(--icons-border);
+  padding-bottom: var(--margin);
+}
+
+.quizIcon {
+  color: var(--icons-color);
+  background: var(--icons-background);
+  border: 1px solid var(--icons-border);
+  border-radius: 50%;
+  padding: 15px;
+}
+
+.question {
+  display: flex;
+  flex-direction: column;
+  gap: var(--margin);
+  margin: var(--padding) calc(var(--margin) * 1.5);
+
+  .questionChoices {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--margin);
+  }
+
+  .questionChoiceButton {
+    flex: 1;
+  }
+}
+
+.quitOrContinue {
+  display: flex;
+  justify-content: right;
+  gap: var(--margin);
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--margin) * 2);
+
+  .progressLine {
+    flex: 1;
+  }
+
+  .progressRemainInfo {
+    color: var(--primary-red);
+    font-size: 70%;
+    font-weight: 700;
+  }
 }

@@ -1,3 +1,13 @@
 .ProgressLine {
+  position: relative;
+  width: 100%;
+  height: 7px;
+  border-radius: 5px;
+  background-color: var(--grey-background);
+}
 
+.ProgressLineValue {
+  background: var(--gradient);
+  height: inherit;
+  border-radius: inherit;
 }

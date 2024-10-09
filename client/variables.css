@@ -9,9 +9,9 @@
   --main-content-min-width: 600px;
 
   /* Colors */
-  --primary-red: #cc3928;
+  --primary-red: #DE2316;
   --black: #111927;
-  --gradient: linear-gradient(90deg, #965af8, #cc3928);
+  --gradient: linear-gradient(90deg, #A056FF, #FF162B);
   --gradient-bar-background: #e5e7eb;
   --grey-background: #fafafb;
   --question-container-grey: #f9fafb;

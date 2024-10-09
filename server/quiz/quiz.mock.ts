@@ -1,6 +1,6 @@
 import type { Quiz } from "./quiz.types";
 
-export default {
+export const quizMock: Quiz = {
   "quizId": "63b2eb294d9a591eddbcfa71",
   "quizName": "Theme quiz test",
   "imageUrl": "https://www.google.com",
@@ -30,4 +30,6 @@ export default {
       "points": 1
     }
   ]
-} as Quiz;
+};
+
+export default quizMock;
