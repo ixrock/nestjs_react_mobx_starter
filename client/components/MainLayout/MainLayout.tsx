@@ -1,8 +1,7 @@
 import * as styles from "./MainLayout.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import Logo from "../../assets/TalentAdoreLogo.svg?inline";
-
+import LogoSvg from "../../assets/TalentAdoreLogo.svg";
 import { cssNames, IClassName } from "../../utils";
 import { LoggedUser } from "../Login";
 
@@ -20,7 +19,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
     return (
       <div className={cssNames(styles.MainLayout, className)}>
         <div className={cssNames(styles.MainLayoutHeader, headerClass)}>
-          <a href="/"><img src={Logo} height={40} alt="Logo" /></a>
+          <a href="/"><img src={LogoSvg} height={40} alt="Logo" /></a>
           <LoggedUser username="Quiz Taker" />
         </div>
         <div className={cssNames(styles.MainLayoutContent, contentClass)}>

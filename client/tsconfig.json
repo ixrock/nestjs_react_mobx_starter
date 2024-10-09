@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "../client",
+    "rootDir": "../",
     "outDir": "../dist/client",
     "jsx": "react",
     "target": "ES2020",

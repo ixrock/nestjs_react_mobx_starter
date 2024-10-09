@@ -6,6 +6,7 @@
   user-select: none;
 
   .userIcon {
+    --icon-size: 25px;
     color: var(--icons-color);
     background: var(--icons-background);
     border: 1px solid var(--icons-border);

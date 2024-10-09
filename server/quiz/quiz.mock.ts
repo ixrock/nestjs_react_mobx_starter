@@ -1,3 +1,5 @@
+import type { Quiz } from "./quiz.types";
+
 export default {
   "quizId": "63b2eb294d9a591eddbcfa71",
   "quizName": "Theme quiz test",
@@ -28,4 +30,4 @@ export default {
       "points": 1
     }
   ]
-};
+} as Quiz;

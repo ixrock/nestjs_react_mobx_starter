@@ -1,0 +1,5 @@
+
+.QuizRender {
+  display: flex;
+  flex-direction: column;
+}

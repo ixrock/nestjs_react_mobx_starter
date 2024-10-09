@@ -1,7 +1,7 @@
 import * as styles from "./LoggedUser.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import UserIcon from "../../assets/icons/user-01.svg";
+import UserIconSvg from "../../assets/icons/user-01.svg";
 import { cssNames, IClassName } from "../../utils";
 import { action, makeObservable, observable } from "mobx";
 import { Icon } from "../Icon";
@@ -42,7 +42,7 @@ export class LoggedUser extends React.Component<UserProps> {
 
     return (
       <div className={cssNames(styles.LoggedUser, className)} onClick={this.toggleMenu}>
-        <Icon svgContent={UserIcon} className={styles.userIcon} />
+        <Icon svgContent={UserIconSvg} className={styles.userIcon} />
         <div className={styles.userName}>{username}</div>
         <i className={arrowIconClass} />
 
