@@ -1,4 +1,11 @@
 :root {
+  /* Dimensions */
+  --padding: 10px;
+  --margin: 20px;
+  --font-size-base: 15px;
+  --border-radius: 10px;
+
+  /* Colors */
   --primary-red: #cc3928;
   --black: #111927;
   --gradient: linear-gradient(90deg, #965af8, #cc3928);

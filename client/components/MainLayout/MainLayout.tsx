@@ -20,7 +20,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
     return (
       <div className={cssNames(styles.MainLayout, className)}>
         <div className={cssNames(styles.MainLayoutHeader, headerClass)}>
-          <img src={Logo} height={40} />
+          <img src={Logo} height={40} alt="Logo" />
           <LoggedUser />
         </div>
         <div className={cssNames(styles.MainLayoutContent, contentClass)}>
