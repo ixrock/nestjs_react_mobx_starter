@@ -13,6 +13,7 @@
 html, body {
   height: 100%;
   font: var(--font-size-base) Inter, sans-serif;
+  color: var(--black);
 }
 
 input, select, textarea {
@@ -21,6 +22,10 @@ input, select, textarea {
   &:invalid {
     box-shadow: none;
   }
+}
+
+a {
+  color: var(--primary-red);
 }
 
 /* generated div#app from main.tsx */

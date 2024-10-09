@@ -3,9 +3,12 @@
   display: grid;
   grid-template-rows: 70px 1fr;
   grid-template-columns: 100px 1fr 100px;
+  background-color: var(--grey-background);
 }
 
 .MainLayoutHeader {
+  position: relative;
+  background-color: #fff;
   padding: var(--padding);
   display: flex;
   justify-content: space-between;
@@ -14,10 +17,12 @@
 }
 
 .MainLayoutContent {
-  min-width: 800px;
+  position: relative;
+  background-color: #fff;
+  min-width: var(--main-content-min-width);
   margin: var(--margin) 0;
-  padding: var(--padding);
+  padding: var(--margin);
   border-radius: var(--border-radius);
-  border: 1px solid silver;
+  border: 1px solid var(--icons-border);
   grid-column: 2 / 3;
 }

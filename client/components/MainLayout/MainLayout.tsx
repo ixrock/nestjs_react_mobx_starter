@@ -6,7 +6,7 @@ import Logo from "../../assets/TalentAdoreLogo.svg?inline";
 import { cssNames, IClassName } from "../../utils";
 import { LoggedUser } from "../Login";
 
-export interface MainLayoutProps {
+export interface MainLayoutProps extends React.PropsWithChildren {
   className?: IClassName;
   headerClass?: IClassName;
   contentClass?: IClassName;
@@ -15,16 +15,16 @@ export interface MainLayoutProps {
 @observer
 export class MainLayout extends React.Component<MainLayoutProps> {
   render() {
-    const { className, contentClass, headerClass, ...props } = this.props;
+    const { className, contentClass, headerClass, children } = this.props;
 
     return (
       <div className={cssNames(styles.MainLayout, className)}>
         <div className={cssNames(styles.MainLayoutHeader, headerClass)}>
-          <img src={Logo} height={40} alt="Logo" />
-          <LoggedUser />
+          <a href="/"><img src={Logo} height={40} alt="Logo" /></a>
+          <LoggedUser username="Quiz Taker" />
         </div>
         <div className={cssNames(styles.MainLayoutContent, contentClass)}>
-          Content
+          {children}
         </div>
       </div>
     );

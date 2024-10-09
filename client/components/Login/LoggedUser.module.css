@@ -1,3 +1,53 @@
 .LoggedUser {
+  display: flex;
+  align-items: center;
+  gap: var(--padding);
+  cursor: pointer;
+  user-select: none;
 
+  .userIcon {
+    color: var(--icons-color);
+    background: var(--icons-background);
+    border: 1px solid var(--icons-border);
+    border-radius: 50%;
+    padding: 5px;
+  }
+
+  .userName {
+    color: #666;
+  }
+
+  .arrowIcon {
+    --size: 10px;
+    width: var(--size);
+    height: var(--size);
+    display: inline-block;
+  }
+
+  .arrowUpIcon {
+    border-right: 1px solid;
+    border-top: 1px solid;
+    transform: rotate(-45deg) translate(-2px, 3px);
+  }
+
+  .arrowDownIcon {
+    border-left: 1px solid;
+    border-bottom: 1px solid;
+    transform: rotate(-45deg) translate(2px, -2px);
+  }
+
+  .menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin: var(--padding);
+    border: 1px solid var(--icons-border);
+    border-radius: 5px;
+    z-index: 1; /* put above other parts of grid-layout */
+
+    a {
+      display: block;
+      padding: var(--padding);
+    }
+  }
 }

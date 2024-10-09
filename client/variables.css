@@ -4,6 +4,9 @@
   --margin: 20px;
   --font-size-base: 15px;
   --border-radius: 10px;
+  --icon-size: 24px;
+  --icon-size-big: 32px;
+  --main-content-min-width: 600px;
 
   /* Colors */
   --primary-red: #cc3928;
