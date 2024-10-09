@@ -1,29 +1,50 @@
 import "./App.module.css";
 import React from "react";
+import { computed } from "mobx";
+import { AppRoute, LoginPageParams, loginRoute, navigation, QuizPageParams, QuizResultsPageParams, quizRoute, quizRouteResult } from "../Navigation";
 import { observer } from "mobx-react";
-import { makeObservable, observable } from "mobx";
-import { MainLayout } from "../MainLayout";
-import { Quiz } from "../Quiz";
 import { Login } from "../Login";
+import { Quiz } from "../Quiz";
+import { QuizResult } from "../Quiz/QuizResult";
 
 @observer
 export class App extends React.Component {
-  constructor(props: React.PropsWithChildren) {
-    super(props);
-    makeObservable(this);
+  static getPath(): string {
+    return navigation.location.pathname;
   }
 
-  @observable isLogged = false; // TODO: use global state from store
+  static routes: AppRoute[] = [
+    {
+      route: loginRoute,
+      params: computed<LoginPageParams>(() => loginRoute.getParams(App.getPath())),
+      render() {
+        return <Login />;
+      }
+    },
+    {
+      route: quizRouteResult,
+      params: computed<QuizResultsPageParams>(() => quizRouteResult.getParams(App.getPath())),
+      render({ quizId }: QuizResultsPageParams) {
+        return <QuizResult quizId={quizId} />;
+      }
+    },
+    {
+      route: quizRoute,
+      params: computed<QuizPageParams>(() => quizRoute.getParams(App.getPath())),
+      render({ quizId }: QuizPageParams) {
+        return <Quiz quizId={quizId} />;
+      }
+    }
+  ];
 
   render() {
-    if (!this.isLogged) {
-      return <Login />;
-    }
+    const appPath = App.getPath();
 
     return (
-      <MainLayout>
-        <Quiz />
-      </MainLayout>
+      <div>
+        <p><b>Location:</b> {appPath}</p>
+        <ol><b>Routes:</b> {App.routes.map(({ route: { routePath } }) => <li key={routePath}>{routePath}</li>)}</ol>
+      </div>
     );
   }
 }

@@ -1,7 +1,7 @@
 import * as styles from "./Quiz.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import type { Question, Quiz as QuizType } from "../../../server/quiz/quiz.types";
+import type { Question, QuizId } from "../../../server/quiz/quiz.types";
 import quizMock from "../../../server/quiz/quiz.mock";
 import { cssNames, IClassName } from "../../utils";
 import QuizIconSvg from "../../assets/icons/puzzle-piece-02.svg";
@@ -12,14 +12,16 @@ import { SubTitle } from "../SubTitle";
 
 export interface QuizProps {
   className?: IClassName;
-  data: QuizType;
+  quizId: QuizId;
 }
 
 @observer
 export class Quiz extends React.Component<QuizProps> {
-  static defaultProps: QuizProps = {
-    data: quizMock
-  };
+  get quiz() {
+    const { quizId } = this.props;
+
+    return [quizMock].find((quiz) => quiz.quizId === quizId);
+  }
 
   renderQuestions(questions: Question[]) {
     return <>
@@ -44,8 +46,8 @@ export class Quiz extends React.Component<QuizProps> {
   }
 
   render() {
-    const { className, data } = this.props;
-    const { quizName, questions } = data;
+    const { className } = this.props;
+    const { quizName, questions } = this.quiz;
 
     return (
       <div className={cssNames(styles.Quiz, className)}>

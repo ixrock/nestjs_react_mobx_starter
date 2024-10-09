@@ -1,0 +1,5 @@
+.QuizResult {
+  display: flex;
+  flex-direction: column;
+  gap: var(--margin);
+}
