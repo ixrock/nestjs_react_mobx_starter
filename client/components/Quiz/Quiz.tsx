@@ -1,7 +1,7 @@
 import * as styles from "./Quiz.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import type { Question, QuizId } from "../../../server/quiz/quiz.types";
+import type { Question } from "../../../server/quiz/quiz.types";
 import quizMock from "../../../server/quiz/quiz.mock";
 import { cssNames, IClassName } from "../../utils";
 import QuizIconSvg from "../../assets/icons/puzzle-piece-02.svg";
@@ -9,10 +9,10 @@ import { Icon } from "../Icon";
 import { ProgressLine } from "../ProgressLine";
 import { Button } from "../Button";
 import { SubTitle } from "../SubTitle";
+import { QuizRouteParams } from "../Navigation";
 
-export interface QuizProps {
+export interface QuizProps extends QuizRouteParams {
   className?: IClassName;
-  quizId: QuizId;
 }
 
 @observer
@@ -20,7 +20,7 @@ export class Quiz extends React.Component<QuizProps> {
   get quiz() {
     const { quizId } = this.props;
 
-    return [quizMock].find((quiz) => quiz.quizId === quizId);
+    return [quizMock].find((quiz) => quiz.quizId === quizId) ?? quizMock;
   }
 
   renderQuestions(questions: Question[]) {

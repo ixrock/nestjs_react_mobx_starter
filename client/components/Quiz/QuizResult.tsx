@@ -2,11 +2,10 @@ import * as styles from "./QuizResult.module.css";
 import React from "react";
 import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
-import type { QuizId } from "../../../server/quiz/quiz.types";
+import { QuizResultRouteParams } from "../Navigation";
 
-export interface QuizResultProps {
+export interface QuizResultProps extends QuizResultRouteParams {
   className?: IClassName;
-  quizId: QuizId;
 }
 
 @observer
@@ -16,7 +15,7 @@ export class QuizResult extends React.Component<QuizResultProps> {
 
     return (
       <div className={cssNames(styles.QuizResult, className)}>
-        Progress result  for quiz ID: "${quizId}"
+        Results for quiz "{quizId}"
       </div>
     );
   }

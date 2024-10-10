@@ -4,8 +4,9 @@ import { action, makeObservable, observable } from "mobx";
 import { observer } from "mobx-react";
 import { Button } from "../Button";
 import LogoSvg from "../../assets/TalentAdoreLogo.svg";
+import { RouteParams } from "../Navigation";
 
-export interface LoginProps {
+export interface LoginProps extends RouteParams {
 }
 
 @observer
@@ -28,7 +29,7 @@ export class Login extends React.Component<LoginProps> {
   render() {
     return (
       <form className={styles.Login} onSubmit={this.onLogin}>
-        <img src={LogoSvg} height={40} alt="Logo" />
+        <a href="/"><img src={LogoSvg} height={40} alt="Logo" /></a>
         <input
           autoFocus
           name="username"
