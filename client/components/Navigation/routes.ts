@@ -12,10 +12,10 @@ export const loginRoute = buildRoute<LoginPageParams>("/login", {
   pageId: PageId.LOGIN
 });
 
-export const quizRoute = buildRoute<QuizPageParams>("/:pageId/quiz/:quizId", {
+export const quizRoute = buildRoute<QuizPageParams>("/quiz/:quizId", {
   pageId: PageId.QUIZ
 });
 
-export const quizRouteResult = buildRoute<QuizResultsPageParams>("/:pageId/quiz/results/:quizId", {
+export const quizRouteResult = buildRoute<QuizResultsPageParams>("/quiz/results/:quizId", {
   pageId: PageId.QUIZ_RESULT
 });

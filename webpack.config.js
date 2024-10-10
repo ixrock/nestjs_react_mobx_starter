@@ -19,7 +19,7 @@ module.exports = function webpackConfig() {
     output: {
       libraryTarget: "global",
       globalObject: "globalThis",
-      publicPath: "auto",
+      publicPath: "/",
       path: distFolderPath,
       filename: "[name].js",
       chunkFilename: "chunks/[name].js",

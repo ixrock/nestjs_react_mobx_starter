@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards, Version } from "@nestjs/common";
 import { QuizService } from "./quiz.service";
 import { GetUser } from "../users/user.decorator";
 import { User } from "../users/users.service";
@@ -6,7 +6,10 @@ import { QuizAnswer, QuizId } from "./quiz.types";
 import { AuthGuard } from "../auth/auth.guard";
 
 @UseGuards(AuthGuard)
-@Controller("user/quiz")
+@Controller({
+  path: "user/quiz",
+  version: "1"
+})
 export class QuizController {
   constructor(
     private quizService: QuizService
@@ -15,7 +18,7 @@ export class QuizController {
 
   @Get("random")
   getRandom(@GetUser() user: User) {
-    return this.quizService.findAvailableQuiz(user.username);
+    return this.quizService.findAvailableQuiz(user?.username ?? "admin");
   }
 
   @Get(":quizId/result")
