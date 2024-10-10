@@ -14,9 +14,9 @@ export class Router extends React.Component {
   }
 
   static routes: AppRoute[] = [
-    { route: quizRouteResult, Component: QuizResult }, // more specific route must be on top
+    { route: loginRoute, Component: Login, topLayout: true },
     { route: quizRoute, Component: Quiz },
-    { route: loginRoute, Component: Login, topLayout: true }
+    { route: quizRouteResult, Component: QuizResult }
   ];
 
   static getActiveRoute<Params extends RouteParams>(currentLocation = Router.getPath()): AppRoute<Params> | undefined {

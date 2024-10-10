@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards, Version } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { QuizService } from "./quiz.service";
 import { GetUser } from "../users/user.decorator";
 import { User } from "../users/users.service";
@@ -18,7 +18,7 @@ export class QuizController {
 
   @Get("random")
   getRandom(@GetUser() user: User) {
-    return this.quizService.findAvailableQuiz(user?.username ?? "admin");
+    return this.quizService.findAvailableQuiz(user?.username ?? "admin"); // FIXME: remove fallback value
   }
 
   @Get(":quizId/result")

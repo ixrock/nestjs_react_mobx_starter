@@ -42,6 +42,6 @@ export const quizRoute = buildRoute<QuizRouteParams>("/quiz/:quizId", {
   pageId: PageId.QUIZ
 });
 
-export const quizRouteResult = buildRoute<QuizResultRouteParams>("/quiz/result/:quizId", {
+export const quizRouteResult = buildRoute<QuizResultRouteParams>("/quiz/:quizId/result", {
   pageId: PageId.QUIZ_RESULT
 });
