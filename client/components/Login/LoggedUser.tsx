@@ -5,6 +5,8 @@ import UserIconSvg from "../../assets/icons/user-01.svg";
 import { cssNames, IClassName } from "../../utils";
 import { action, makeObservable, observable } from "mobx";
 import { Icon } from "../Icon";
+import { saveApiToken } from "../../apis";
+import { loginRoute, navigation } from "../Navigation";
 
 export interface UserProps {
   className?: IClassName;
@@ -25,11 +27,11 @@ export class LoggedUser extends React.Component<UserProps> {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  logout(evt: React.MouseEvent) {
+  private logout(evt: React.MouseEvent) {
     evt.preventDefault();
     evt.stopPropagation();
-
-    console.log("//FIXME: make actual logout here");
+    saveApiToken(""); // clear token
+    navigation.push(loginRoute.toURLPath()); // redirect to login page
   }
 
   render() {

@@ -35,6 +35,11 @@ export function buildApiRequest<Response>({ apiBase = API_BASE, basePath = "", m
         }
       });
 
+      if (response.status >= 400 && response.status < 600) {
+        const error: ApiError = await response.json();
+        throw new ApiError(error.statusCode, error.message);
+      }
+
       return response.json();
     },
 
@@ -44,9 +49,14 @@ export function buildApiRequest<Response>({ apiBase = API_BASE, basePath = "", m
   };
 }
 
+export interface ApiError {
+  message: string;
+  statusCode: number;
+}
+
 export class ApiError extends Error {
-  constructor(public status: number, public message: string) {
-    super(message);
+  constructor(public statusCode: number, public message: string) {
+    super(`API Error (${statusCode}): ` + message);
     Error.captureStackTrace(this, new.target);
   }
 }

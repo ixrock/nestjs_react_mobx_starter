@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { ConfigService } from "@nestjs/config";
 import { UsersService } from "../users/users.service";
 import { AuthLoginResponse, AuthSignPayload } from "./auth.types";
 
@@ -7,7 +8,8 @@ import { AuthLoginResponse, AuthSignPayload } from "./auth.types";
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private configService: ConfigService
   ) {
   }
 
@@ -20,8 +22,12 @@ export class AuthService {
 
     const payload: AuthSignPayload = { username };
 
+    const accessToken = await this.jwtService.signAsync(payload, {
+      secret: this.configService.get<string>("JWT_SECRET")
+    });
+
     return {
-      accessToken: await this.jwtService.signAsync(payload)
+      accessToken
     };
   }
 }

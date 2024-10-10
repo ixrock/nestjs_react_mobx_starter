@@ -7,25 +7,35 @@ export * from "./buildApiRequest";
 // Backend api-helpers
 
 // auth.controller.ts
-export const quizLoginApi = () => buildApiRequest({
-  basePath: "/auth/login",
-  method: "POST"
-});
+export function authLoginApi<Response>() {
+  return buildApiRequest<Response>({
+    basePath: "/auth/login",
+    method: "POST"
+  });
+}
 
 // quiz.controller.ts
-export const quizRandomApi = () => buildApiRequest({
-  basePath: "/user/quiz/random"
-});
+export function quizRandomApi() {
+  return buildApiRequest({
+    basePath: "/user/quiz/random"
+  });
+}
 
-export const quizApi = (quizId: QuizId) => buildApiRequest({
-  basePath: `/user/quiz/${quizId}`
-});
+export function quizApi(quizId: QuizId) {
+  return buildApiRequest({
+    basePath: `/user/quiz/${quizId}`
+  });
+}
 
-export const quizSubmitApi = (quizId: QuizId) => buildApiRequest({
-  method: "POST",
-  basePath: `/user/quiz/${quizId}/submit`
-});
+export function quizSubmitApi(quizId: QuizId) {
+  return buildApiRequest({
+    method: "POST",
+    basePath: `/user/quiz/${quizId}/submit`
+  });
+}
 
-export const quizResultApi = (quizId: QuizId) => buildApiRequest({
-  basePath: `/user/quiz/${quizId}/result`
-});
+export function quizResultApi(quizId: QuizId) {
+  return buildApiRequest({
+    basePath: `/user/quiz/${quizId}/result`
+  });
+}

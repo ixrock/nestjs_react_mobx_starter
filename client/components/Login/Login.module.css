@@ -6,4 +6,15 @@
   gap: var(--margin);
   padding: calc(var(--margin) * 2);
   margin: auto;
+  min-width: 300px;
+  min-height: 300px;
+}
+
+.authError {
+  font-size: var(--font-size-small);
+  color: var(--primary-red);
+
+  &:empty {
+    display: none;
+  }
 }
