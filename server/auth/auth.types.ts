@@ -13,3 +13,6 @@ export interface AuthLoginResponse {
 export interface AuthSignPayload {
   username: string;
 }
+
+export interface LoggedUserPayload extends AuthSignPayload {
+}

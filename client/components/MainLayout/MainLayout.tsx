@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import LogoSvg from "../../assets/TalentAdoreLogo.svg";
 import { cssNames, IClassName } from "../../utils";
 import { LoggedUser } from "../Login";
+import { appStore } from "../app-store";
 
 export interface MainLayoutProps extends React.PropsWithChildren {
   className?: IClassName;
@@ -20,7 +21,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
       <div className={cssNames(styles.MainLayout, className)}>
         <div className={cssNames(styles.MainLayoutHeader, headerClass)}>
           <a href="/"><img src={LogoSvg} height={40} alt="Logo" /></a>
-          <LoggedUser username="Quiz Taker" />
+          <LoggedUser username={appStore.user?.username ?? "Unknown"} />
         </div>
         <div className={cssNames(styles.MainLayoutContent, contentClass)}>
           {children}

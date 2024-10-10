@@ -1,7 +1,7 @@
-import type { Quiz } from "./quiz.types";
+import type { QuizType } from "./quiz.types";
 
-export const quizMock: Quiz = {
-  "quizId": "63b2eb294d9a591eddbcfa71",
+export const quizMock: QuizType = {
+  "quizId": "1",
   "quizName": "Theme quiz test",
   "imageUrl": "https://www.google.com",
   "iconUrl": "https://www.google.com",

@@ -20,7 +20,7 @@ export class Quiz extends React.Component<QuizProps> {
   get quiz() {
     const { quizId } = this.props;
 
-    return [quizMock].find((quiz) => quiz.quizId === quizId) ?? quizMock;
+    return [quizMock].find((quiz) => quiz.quizId === quizId);
   }
 
   renderQuestions(questions: Question[]) {

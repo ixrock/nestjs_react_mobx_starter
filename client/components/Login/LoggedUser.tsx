@@ -7,6 +7,7 @@ import { action, makeObservable, observable } from "mobx";
 import { Icon } from "../Icon";
 import { saveApiToken } from "../../apis";
 import { loginRoute, navigation } from "../Navigation";
+import { logoutAppStore } from "../app-store";
 
 export interface UserProps {
   className?: IClassName;
@@ -27,9 +28,11 @@ export class LoggedUser extends React.Component<UserProps> {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
+  @action.bound
   private logout(evt: React.MouseEvent) {
     evt.preventDefault();
     evt.stopPropagation();
+    logoutAppStore();
     saveApiToken(""); // clear token
     navigation.push(loginRoute.toURLPath()); // redirect to login page
   }

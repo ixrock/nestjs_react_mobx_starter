@@ -1,7 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { QuizService } from "./quiz.service";
 import { GetUser } from "../users/user.decorator";
-import { User } from "../users/users.service";
 import { QuizAnswer, QuizId } from "./quiz.types";
 import { AuthGuard } from "../auth/auth.guard";
 
@@ -17,26 +16,26 @@ export class QuizController {
   }
 
   @Get("random")
-  getRandom(@GetUser() user: User) {
-    return this.quizService.findAvailableQuiz(user?.username ?? "admin"); // FIXME: remove fallback value
+  getRandom(@GetUser() user: string) {
+    return this.quizService.findAvailableQuiz(user);
   }
 
   @Get(":quizId/result")
   getResult(
-    @GetUser() user: User,
+    @GetUser() user: string,
     @Param("quizId") quizId: QuizId
   ) {
-    return this.quizService.findResult(user.username, quizId);
+    return this.quizService.findResult(user, quizId);
   }
 
   @Post(":quizId/submit")
   submit(
-    @GetUser() user: User,
+    @GetUser() user: string,
     @Param("quizId") quizId: QuizId,
     @Body() data: QuizAnswer[]
   ) {
     return this.quizService.submitQuiz({
-      userName: user.username,
+      userName: user,
       quizId,
       answers: data
     });

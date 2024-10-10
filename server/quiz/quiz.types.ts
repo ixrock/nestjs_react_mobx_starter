@@ -1,7 +1,7 @@
 export type QuizId = string;
 export type QuestionId = string;
 
-export interface Quiz {
+export interface QuizType {
   quizId: QuizId;
   quizName: string;
   imageUrl: string;
@@ -17,7 +17,7 @@ export interface Question {
   points: number;
 }
 
-export interface QuizResult {
+export interface QuizResultType {
   quizId: QuizId;
   quizName: string;
   totalScore: number;

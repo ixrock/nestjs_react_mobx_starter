@@ -4,9 +4,10 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { Button } from "../Button";
 import LogoSvg from "../../assets/TalentAdoreLogo.svg";
-import { navigation, quizRoute, RouteParams } from "../Navigation";
+import { navigation, RouteParams } from "../Navigation";
 import { ApiError, authLoginApi, saveApiToken } from "../../apis";
 import type { AuthLoginDto, AuthLoginResponse } from "../../../server/auth/auth.types";
+import { appStore } from "../app-store";
 
 export interface LoginProps extends RouteParams {
 }
@@ -23,7 +24,7 @@ export class Login extends React.Component<LoginProps> {
   @observable authError = "";
 
   authRequest(data: AuthLoginDto): Promise<AuthLoginResponse> {
-    return authLoginApi<AuthLoginResponse>().request({
+    return authLoginApi().request({
       data: JSON.stringify(data)
     });
   }
@@ -31,8 +32,9 @@ export class Login extends React.Component<LoginProps> {
   async login() {
     const { username, password } = this;
     const { accessToken } = await this.authRequest({ username, password });
-    const homePathOnLogin = quizRoute.toURLPath({ quizId: "random" });
+    const homePathOnLogin = "/";
 
+    appStore.user = { username };
     saveApiToken(accessToken); // save for restricted apis access
     navigation.push(homePathOnLogin);
   }

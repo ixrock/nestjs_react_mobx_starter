@@ -1,21 +1,21 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { Quiz, QuizAnswer, QuizId, QuizResult, QuizSubmitDto } from "./quiz.types";
+import { QuizType, QuizAnswer, QuizId, QuizResultType, QuizSubmitDto } from "./quiz.types";
 import quizMockJson from "./quiz.mock";
 
 @Injectable()
 export class QuizService {
   // for the sake of simplicity we keep quiz list hardcoded here:
-  private quizList: Quiz[] = [quizMockJson as Quiz];
+  private quizList: QuizType[] = [quizMockJson as QuizType];
 
   // for the sake of simplicity, we keep quiz results in memory:
   // in real world scenario this should be provided from a database, e.g. with "@nestjs/typeorm"
   private quizResultsPerUser: Record<string, Record<QuizId, QuizAnswer[]>> = {};
 
-  findQuizBy(id: QuizId): Quiz | undefined {
+  findQuizBy(id: QuizId): QuizType | undefined {
     return this.quizList.find(quiz => quiz.quizId === id);
   }
 
-  findAvailableQuiz(userName: string): Quiz {
+  findAvailableQuiz(userName: string): QuizType {
     const answeredQuizIds = Object.keys(this.quizResultsPerUser[userName] || {});
     const availableQuizList = this.quizList.filter(quiz => !answeredQuizIds.includes(quiz.quizId));
 
@@ -30,7 +30,7 @@ export class QuizService {
     }, HttpStatus.NOT_FOUND);
   }
 
-  findResult(userName: string, quizId: QuizId): QuizResult {
+  findResult(userName: string, quizId: QuizId): QuizResultType {
     const answers = this.quizResultsPerUser[userName]?.[quizId];
 
     if (!answers) {
