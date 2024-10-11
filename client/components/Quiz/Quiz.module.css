@@ -4,6 +4,10 @@
   gap: var(--margin);
 }
 
+.QuizNotFound {
+  opacity: .25;
+}
+
 .quizHeader {
   display: flex;
   align-items: center;

@@ -1,26 +1,79 @@
 import * as styles from "./Quiz.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import type { Question } from "../../../server/quiz/quiz.types";
-import quizMock from "../../../server/quiz/quiz.mock";
-import { cssNames, IClassName } from "../../utils";
+import { action, makeObservable, observable, reaction } from "mobx";
+import type { Question, QuizId, QuizType } from "../../../server/quiz/quiz.types";
+import { cssNames, disposer, IClassName } from "../../utils";
 import QuizIconSvg from "../../assets/icons/puzzle-piece-02.svg";
 import { Icon } from "../Icon";
 import { ProgressLine } from "../ProgressLine";
 import { Button } from "../Button";
 import { SubTitle } from "../SubTitle";
-import { QuizRouteParams } from "../Navigation";
+import { navigation, quizRoute, QuizRouteParams, RouteComponentParams } from "../Navigation";
+import { quizApi, quizRandomApi } from "../../apis";
+import { QUIZ_RANDOM_ID } from "./quiz.constants";
 
-export interface QuizProps extends QuizRouteParams {
+export interface QuizProps extends RouteComponentParams<QuizRouteParams> {
   className?: IClassName;
 }
 
 @observer
 export class Quiz extends React.Component<QuizProps> {
-  get quiz() {
-    const { quizId } = this.props;
+  private disposer = disposer();
 
-    return [quizMock].find((quiz) => quiz.quizId === quizId);
+  @observable.ref quiz?: QuizType;
+  @observable isLoading = false;
+  @observable error = "";
+
+  constructor(props: QuizProps) {
+    super(props);
+    makeObservable(this);
+    this.bindDataLoader();
+  }
+
+  componentWillUnmount() {
+    this.disposer();
+  }
+
+  // TODO: probably move handling Route related api data-layer to <Router> + use global state via `appStore`
+  private bindDataLoader() {
+    const { params } = this.props;
+
+    const disposer = reaction(() => params.get(), ({ quizId }) => {
+      if (quizId === QUIZ_RANDOM_ID) {
+        void this.redirectToRandomQuiz();
+      } else {
+        void this.preloadQuiz(quizId);
+      }
+    }, {
+      fireImmediately: true
+    });
+
+    this.disposer.push(disposer);
+  }
+
+  // TODO: handle random quiz from new <Route> + redirect to quiz page
+  async redirectToRandomQuiz() {
+    const availableQuiz = await quizRandomApi().request();
+
+    if (availableQuiz) {
+      navigation.replace(
+        quizRoute.toURLPath({ quizId: availableQuiz.quizId })
+      );
+    }
+  }
+
+  @action.bound
+  async preloadQuiz(quizId: QuizId) {
+    try {
+      this.error = "";
+      this.isLoading = true;
+      this.quiz = await quizApi(quizId).request();
+    } catch (error) {
+      this.error = String(error);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   renderQuestions(questions: Question[]) {
@@ -45,12 +98,28 @@ export class Quiz extends React.Component<QuizProps> {
     </>;
   }
 
-  render() {
-    const { className } = this.props;
-    const { quizName, questions } = this.quiz;
+  renderQuizNotAvailable() {
+    const { quizId } = this.props.params.get();
 
     return (
-      <div className={cssNames(styles.Quiz, className)}>
+      <div className={styles.QuizNotFound}>
+        Quiz <em>ID="{quizId}"</em> not available: {this.error}
+      </div>
+    );
+  }
+
+  render() {
+    const { quiz, error } = this;
+
+    if (!quiz) {
+      if (error) return this.renderQuizNotAvailable();
+      return "Loading quiz...";
+    }
+
+    const { quizName, questions } = quiz;
+
+    return (
+      <div className={cssNames(styles.Quiz, this.props.className)}>
         <div className={styles.quizHeader}>
           <Icon big svgContent={QuizIconSvg} className={styles.quizIcon} />
           <h2>{quizName}</h2>

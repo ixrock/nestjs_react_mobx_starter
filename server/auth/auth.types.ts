@@ -1,4 +1,4 @@
-/* data transfer object collected from user's login form */
+/* data transfer object collected from login form */
 export interface AuthLoginDto {
   username: string;
   password: string;

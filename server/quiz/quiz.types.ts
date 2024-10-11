@@ -1,4 +1,5 @@
 export type QuizId = string;
+
 export type QuestionId = string;
 
 export interface QuizType {

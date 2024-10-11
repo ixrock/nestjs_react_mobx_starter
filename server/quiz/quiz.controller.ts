@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
 import { QuizService } from "./quiz.service";
 import { GetUser } from "../users/user.decorator";
-import { QuizAnswer, QuizId, QuizSubmitDto } from "./quiz.types";
+import { QuizId, QuizSubmitDto } from "./quiz.types";
 import { AuthGuard } from "../auth/auth.guard";
 
 @UseGuards(AuthGuard)
@@ -16,23 +16,62 @@ export class QuizController {
   }
 
   @Get("random")
-  getRandom(@GetUser() user: string) {
-    return this.quizService.findAvailableQuiz(user);
+  async getRandom(@GetUser() user: string) {
+    const randomQuiz = await this.quizService.findAvailableQuiz(user);
+
+    if (randomQuiz) return randomQuiz;
+
+    throw new HttpException({
+      status: "NOT_FOUND",
+      message: "QUIZ_NOT_FOUND"
+    }, HttpStatus.NOT_FOUND);
   }
 
-  @Get(":quizId/result")
-  getResult(
+  @Get(":quizId")
+  async getQuiz(
     @GetUser() user: string,
     @Param("quizId") quizId: QuizId
   ) {
-    return this.quizService.findQuizResult(user, quizId);
+    const quiz = await this.quizService.findQuizBy(quizId);
+
+    if (quiz) return quiz;
+
+    throw new HttpException({
+      status: "NOT_FOUND",
+      message: "QUIZ_NOT_FOUND"
+    }, HttpStatus.NOT_FOUND);
+  }
+
+  @Get(":quizId/result")
+  async getQuizResult(
+    @GetUser() user: string,
+    @Param("quizId") quizId: QuizId
+  ) {
+    const quizResult = await this.quizService.findQuizResult(user, quizId);
+
+    if (quizResult) return quizResult;
+
+    throw new HttpException({
+      status: "NOT_FOUND",
+      message: "QUIZ_RESULT_NOT_FOUND",
+      traceId: quizId
+    }, HttpStatus.NOT_FOUND);
   }
 
   @Post(":quizId/submit")
-  submit(
+  async submitQuiz(
     @GetUser() userName: string,
+    @Param("quizId") quizId: QuizId,
     @Body() data: QuizSubmitDto
   ) {
-    return this.quizService.submitQuiz(userName, data);
+    const success = await this.quizService.submitQuiz(userName, data);
+
+    if (!success) {
+      throw new HttpException({
+        "status": "PRECONDITION_FAILED",
+        "message": "QUIZ_ALREADY_TAKEN",
+        "traceId": quizId
+      }, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
   }
 }

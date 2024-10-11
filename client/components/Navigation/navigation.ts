@@ -2,13 +2,15 @@ import { createObservableHistory } from "mobx-observable-history";
 
 export const navigation = createObservableHistory();
 
-export type BuildRouteHelper<Params> = ReturnType<typeof buildRoute<Params>>;
+export type RouteHelper<Params> = ReturnType<typeof buildRoute<Params>>;
 
 export function buildRoute<Params>(routePath: string, defaultParams: Partial<Params> = {}) {
   return {
     routePath,
 
     toURLPath(params?: Params): string {
+      if (!params) return routePath;
+
       return routePath.replace(/:(\w+)/g, (_, key: string) => (params as any)?.[key]);
     },
 

@@ -2,14 +2,15 @@ import * as styles from "./Login.module.css";
 import React from "react";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import { Button } from "../Button";
 import LogoSvg from "../../assets/TalentAdoreLogo.svg";
-import { navigation, RouteParams } from "../Navigation";
-import { ApiError, authLoginApi, saveApiToken } from "../../apis";
+import { Button } from "../Button";
 import type { AuthLoginDto, AuthLoginResponse } from "../../../server/auth/auth.types";
+import { QUIZ_RANDOM_ID } from "../Quiz";
+import { navigation, quizRoute, RouteComponentParams } from "../Navigation";
+import { ApiError, authLoginApi, saveApiToken } from "../../apis";
 import { appStore } from "../app-store";
 
-export interface LoginProps extends RouteParams {
+export interface LoginProps extends RouteComponentParams {
 }
 
 @observer
@@ -23,18 +24,24 @@ export class Login extends React.Component<LoginProps> {
   @observable password = "";
   @observable authError = "";
 
-  authRequest(data: AuthLoginDto): Promise<AuthLoginResponse> {
+  private authRequest(data: AuthLoginDto): Promise<AuthLoginResponse> {
     return authLoginApi().request({ data });
   }
 
+  @action.bound
   async login() {
     const { username, password } = this;
     const { accessToken } = await this.authRequest({ username, password });
-    const homePathOnLogin = "/";
 
+    // update logged username and save api-token
     appStore.user = { username };
-    saveApiToken(accessToken); // save for restricted apis access
-    navigation.push(homePathOnLogin);
+    saveApiToken(accessToken);
+
+    // redirect to home page after successful login (random quiz)
+    const redirectPathOnLogin = quizRoute.toURLPath({
+      quizId: QUIZ_RANDOM_ID
+    });
+    navigation.replace(redirectPathOnLogin);
   }
 
   onLogin = async (evt: React.FormEvent) => {

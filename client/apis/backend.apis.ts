@@ -25,13 +25,19 @@ export function quizRandomApi() {
   });
 }
 
+export function quizApi(quizId: QuizId) {
+  return buildApiRequest<QuizType>({
+    basePath: `/user/quiz/${quizId}`
+  });
+}
+
 export function quizResultApi(quizId: QuizId) {
   return buildApiRequest<QuizResultType>({
     basePath: `/user/quiz/${quizId}/result`
   });
 }
 
-export function quizSubmitApi<Data extends QuizSubmitDto>(quizId: QuizId, data: Data) {
+export function quizSubmitApi<Data extends QuizSubmitDto>(quizId: QuizId) {
   return buildApiRequest<Data>({
     method: "POST",
     basePath: `/user/quiz/${quizId}/submit`

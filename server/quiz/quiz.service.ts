@@ -1,5 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { QuizType, QuizAnswer, QuizId, QuizResultType, QuizSubmitDto } from "./quiz.types";
+import { Injectable } from "@nestjs/common";
+import { QuizAnswer, QuizId, QuizResultType, QuizSubmitDto, QuizType } from "./quiz.types";
 import quizMockJson from "./quiz.mock";
 
 @Injectable()
@@ -23,12 +23,6 @@ export class QuizService {
     if (availableQuizList.length > 0) {
       return availableQuizList[Math.floor(Math.random() * availableQuizList.length)];
     }
-
-    throw new HttpException({
-      "status": "PRECONDITION_FAILED",
-      "message": "QUIZ_ALREADY_TAKEN",
-      "traceId": "91b04b58543b84c9"
-    }, HttpStatus.NOT_FOUND);
   }
 
   async findQuizResult(userName: string, quizId: QuizId): Promise<QuizResultType> {
@@ -36,11 +30,7 @@ export class QuizService {
     const answers = this.quizResultsPerUser[userName]?.[quizId];
 
     if (!quiz || !answers) {
-      throw new HttpException({
-        status: "NOT_FOUND",
-        message: "QUIZ_RESULT_NOT_FOUND",
-        traceId: quizId
-      }, HttpStatus.NOT_FOUND);
+      return;
     }
 
     // FIXME: fake score calculations
@@ -62,18 +52,13 @@ export class QuizService {
     };
   }
 
-  async submitQuiz(userName: string, { quizId, answers }: QuizSubmitDto) {
+  async submitQuiz(userName: string, { quizId, answers }: QuizSubmitDto): Promise<boolean> {
     this.quizResultsPerUser[userName] ??= {};
 
     const userHasAnswersForTheQuiz = this.quizResultsPerUser[userName][quizId];
-    if (userHasAnswersForTheQuiz) {
-      throw new HttpException({
-        "status": "PRECONDITION_FAILED",
-        "message": "QUIZ_ALREADY_TAKEN",
-        "traceId": quizId
-      }, HttpStatus.UNPROCESSABLE_ENTITY);
-    }
+    if (userHasAnswersForTheQuiz) return false;
 
     this.quizResultsPerUser[userName][quizId] = answers;
+    return true;
   }
 }

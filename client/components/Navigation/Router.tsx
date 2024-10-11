@@ -1,9 +1,9 @@
 import React from "react";
+import { computed } from "mobx";
 import { observer } from "mobx-react";
-import { AppRoute, loginRoute, navigation, quizRoute, quizRouteResult, RouteParams } from "../Navigation";
+import { AppRoute, loginRoute, navigation, quizRoute, quizRouteResult, RouteHelper, RouteParams } from "../Navigation";
 import { Login } from "../Login";
-import { Quiz } from "../Quiz";
-import { QuizResult } from "../Quiz/QuizResult";
+import { Quiz, QuizResult } from "../Quiz";
 import { NotFound } from "../NotFound";
 import { MainLayout } from "../MainLayout";
 
@@ -28,20 +28,24 @@ export class Router extends React.Component {
     });
   }
 
+  static getRouteParams<Params extends RouteParams>(route: RouteHelper<Params>) {
+    return computed(() => route.getParams(Router.getPath()));
+  }
+
   render() {
     const currentLocation = Router.getPath();
     const isRootPath = currentLocation === "/";
     const { route, Component, noWrap } = Router.getActiveRoute(currentLocation) || {} as AppRoute;
-    const routeParams = route?.getParams(currentLocation);
+    const params = Router.getRouteParams(route);
 
     if (route && noWrap) {
-      return <Component {...routeParams} />;
+      return <Component params={params} />;
     }
 
     return (
       <MainLayout>
         {!route && !isRootPath && <NotFound />}
-        {route && <Component {...routeParams} />}
+        {route && <Component params={params} />}
       </MainLayout>
     );
   }
