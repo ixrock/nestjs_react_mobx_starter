@@ -1,3 +1,3 @@
 export * from "./apiToken.storage";
 export * from "./buildApiRequest";
-export * from "./backend.apis";
+export * from "./endpoints.apis";

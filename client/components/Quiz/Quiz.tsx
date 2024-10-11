@@ -35,7 +35,7 @@ export class Quiz extends React.Component<QuizProps> {
     this.disposer();
   }
 
-  // TODO: probably move handling Route related api data-layer to <Router> + use global state via `appStore`
+  // TODO: probably move handling Route related api data-layer to <Router> + use global state from `appStore`
   private bindDataLoader() {
     const { params } = this.props;
 
@@ -63,17 +63,15 @@ export class Quiz extends React.Component<QuizProps> {
     }
   }
 
-  @action.bound
-  async preloadQuiz(quizId: QuizId) {
-    try {
-      this.error = "";
-      this.isLoading = true;
-      this.quiz = await quizApi(quizId).request();
-    } catch (error) {
-      this.error = String(error);
-    } finally {
-      this.isLoading = false;
-    }
+  @action
+  preloadQuiz(quizId: QuizId) {
+    this.error = "";
+    this.isLoading = true;
+
+    return quizApi(quizId).request()
+      .then(action(quiz => this.quiz = quiz))
+      .catch(action(error => this.error = String(error)))
+      .finally(action(() => this.isLoading = false));
   }
 
   renderQuestions(questions: Question[]) {
