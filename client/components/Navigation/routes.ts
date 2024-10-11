@@ -5,7 +5,7 @@ import { buildRoute, BuildRouteHelper } from "./navigation";
 export interface AppRoute<Params extends RouteParams = RouteParams> {
   route: BuildRouteHelper<Params>;
   Component: React.ComponentType<Params | any>;
-  topLayout?: boolean; // don't render inside parent's layout component wrapper
+  noWrap?: boolean; // render inside app's root element
 }
 
 export enum PageId {
@@ -13,6 +13,8 @@ export enum PageId {
   QUIZ = "quiz",
   QUIZ_RESULT = "quiz_result",
 }
+
+// Route params
 
 export interface RouteParams {
   pageId?: PageId;

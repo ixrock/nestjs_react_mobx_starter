@@ -39,7 +39,6 @@ export interface QuizAnswer {
 }
 
 export interface QuizSubmitDto {
-  userName: string;
   quizId: QuizId;
   answers: QuizAnswer[];
 }

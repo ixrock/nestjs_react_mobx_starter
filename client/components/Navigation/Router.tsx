@@ -14,7 +14,7 @@ export class Router extends React.Component {
   }
 
   static routes: AppRoute[] = [
-    { route: loginRoute, Component: Login, topLayout: true },
+    { route: loginRoute, Component: Login, noWrap: true },
     { route: quizRoute, Component: Quiz },
     { route: quizRouteResult, Component: QuizResult }
   ];
@@ -31,10 +31,10 @@ export class Router extends React.Component {
   render() {
     const currentLocation = Router.getPath();
     const isRootPath = currentLocation === "/";
-    const { route, Component, topLayout } = Router.getActiveRoute(currentLocation) || {};
+    const { route, Component, noWrap } = Router.getActiveRoute(currentLocation) || {} as AppRoute;
     const routeParams = route?.getParams(currentLocation);
 
-    if (topLayout && route) {
+    if (route && noWrap) {
       return <Component {...routeParams} />;
     }
 

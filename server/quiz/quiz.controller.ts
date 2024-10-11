@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from "@nestjs/common";
 import { QuizService } from "./quiz.service";
 import { GetUser } from "../users/user.decorator";
-import { QuizAnswer, QuizId } from "./quiz.types";
+import { QuizAnswer, QuizId, QuizSubmitDto } from "./quiz.types";
 import { AuthGuard } from "../auth/auth.guard";
 
 @UseGuards(AuthGuard)
 @Controller({
-  path: "user/quiz",
-  version: "1"
+  version: "1",
+  path: "user/quiz"
 })
 export class QuizController {
   constructor(
@@ -25,19 +25,14 @@ export class QuizController {
     @GetUser() user: string,
     @Param("quizId") quizId: QuizId
   ) {
-    return this.quizService.findResult(user, quizId);
+    return this.quizService.findQuizResult(user, quizId);
   }
 
   @Post(":quizId/submit")
   submit(
-    @GetUser() user: string,
-    @Param("quizId") quizId: QuizId,
-    @Body() data: QuizAnswer[]
+    @GetUser() userName: string,
+    @Body() data: QuizSubmitDto
   ) {
-    return this.quizService.submitQuiz({
-      userName: user,
-      quizId,
-      answers: data
-    });
+    return this.quizService.submitQuiz(userName, data);
   }
 }

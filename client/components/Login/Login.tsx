@@ -24,9 +24,7 @@ export class Login extends React.Component<LoginProps> {
   @observable authError = "";
 
   authRequest(data: AuthLoginDto): Promise<AuthLoginResponse> {
-    return authLoginApi().request({
-      data: JSON.stringify(data)
-    });
+    return authLoginApi().request({ data });
   }
 
   async login() {
