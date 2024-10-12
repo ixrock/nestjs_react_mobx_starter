@@ -3,7 +3,7 @@ import { computed, IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import { AppRoute, homeRoute, loginRoute, navigation, quizRandomRoute, quizRoute, quizRouteResult, RouteHelper, RouteParams } from "../Navigation";
 import { Login } from "../Login";
-import { Quiz, QuizResult } from "../Quiz";
+import { Quiz, QuizRandom, QuizResult } from "../Quiz";
 import { NotFound } from "../NotFound";
 import { MainLayout } from "../MainLayout";
 
@@ -15,8 +15,10 @@ export class Router extends React.Component {
 
   static routes: AppRoute[] = [
     { route: loginRoute, Component: Login, noWrap: true },
+
+    // should be declared above of quizRout with `/quiz/:quiz` since it has more specific path "/quiz/random"
+    { route: quizRandomRoute, Component: QuizRandom, isDefault: true },
     { route: quizRoute, Component: Quiz },
-    { route: quizRandomRoute, Component: Quiz, isDefault: true },
     { route: quizRouteResult, Component: QuizResult }
   ];
 

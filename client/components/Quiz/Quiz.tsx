@@ -1,7 +1,7 @@
 import * as styles from "./Quiz.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import { action, makeObservable, observable, reaction, runInAction } from "mobx";
+import { action, makeObservable, observable, reaction } from "mobx";
 import type { Question, QuizId, QuizType } from "../../../server/quiz/quiz.types";
 import { cssNames, disposer, IClassName } from "../../utils";
 import QuizIconSvg from "../../assets/icons/puzzle-piece-02.svg";
@@ -9,9 +9,8 @@ import { Icon } from "../Icon";
 import { ProgressLine } from "../ProgressLine";
 import { Button } from "../Button";
 import { SubTitle } from "../SubTitle";
-import { navigation, quizRoute, QuizRouteParams, RouteComponentParams } from "../Navigation";
-import { quizApi, quizRandomApi } from "../../apis";
-import { QUIZ_RANDOM_ID } from "./quiz.constants";
+import { QuizRouteParams, RouteComponentParams } from "../Navigation";
+import { quizApi } from "../../apis";
 
 export interface QuizProps extends RouteComponentParams<QuizRouteParams> {
   className?: IClassName;
@@ -35,35 +34,19 @@ export class Quiz extends React.Component<QuizProps> {
     this.disposer();
   }
 
-  // TODO: probably move handling Route related api data-layer to <Router> + use global state from `appStore`
   private bindDataLoader() {
     const { params } = this.props;
 
-    const disposer = reaction(() => params.get(), ({ quizId }) => {
-      if (quizId === QUIZ_RANDOM_ID) {
-        void this.redirectToRandomQuiz();
-      } else if (quizId) {
-        void this.preloadQuiz(quizId);
+    const disposer = reaction(
+      () => params.get(),
+      ({ quizId }) => this.preloadQuiz(quizId),
+      {
+        delay: 100,
+        fireImmediately: true
       }
-    }, {
-      fireImmediately: true
-    });
+    );
 
     this.disposer.push(disposer);
-  }
-
-  async redirectToRandomQuiz() {
-    try {
-      const availableQuiz = await quizRandomApi().request();
-
-      if (availableQuiz) {
-        navigation.replace(
-          quizRoute.toURLPath({ quizId: availableQuiz.quizId })
-        );
-      }
-    } catch (err) {
-      runInAction(() => this.error = String(err));
-    }
   }
 
   @action
@@ -71,6 +54,7 @@ export class Quiz extends React.Component<QuizProps> {
     this.error = "";
     this.isLoading = true;
 
+    // TODO: probably move handling Route related api data-layer to <Router> + use global state via `appStore`
     return quizApi(quizId).request()
       .then(action(quiz => this.quiz = quiz))
       .catch(action(error => this.error = String(error)))
