@@ -5,8 +5,7 @@ import { observer } from "mobx-react";
 import LogoSvg from "../../assets/TalentAdoreLogo.svg";
 import { Button } from "../Button";
 import type { AuthLoginDto, AuthLoginResponse } from "../../../server/auth/auth.types";
-import { QUIZ_RANDOM_ID } from "../Quiz";
-import { navigation, quizRoute, RouteComponentParams } from "../Navigation";
+import { homeRoute, RouteComponentParams } from "../Navigation";
 import { ApiError, authLoginApi, saveApiToken } from "../../apis";
 import { appStore } from "../app-store";
 
@@ -37,11 +36,8 @@ export class Login extends React.Component<LoginProps> {
     appStore.user = { username };
     saveApiToken(accessToken);
 
-    // redirect to home page after successful login (random quiz)
-    const redirectPathOnLogin = quizRoute.toURLPath({
-      quizId: QUIZ_RANDOM_ID
-    });
-    navigation.replace(redirectPathOnLogin);
+    // redirect to home page after successful sign-in
+    homeRoute.navigate({}, true);
   }
 
   onLogin = async (evt: React.FormEvent) => {
@@ -64,7 +60,9 @@ export class Login extends React.Component<LoginProps> {
   render() {
     return (
       <form className={styles.Login} onSubmit={this.onLogin}>
-        <a href="/"><img src={LogoSvg} height={40} alt="Logo" /></a>
+        <a onClick={() => homeRoute.navigate()}>
+          <img src={LogoSvg} height={40} alt="Logo" />
+        </a>
         <input
           autoFocus
           name="username"

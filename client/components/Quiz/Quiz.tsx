@@ -1,7 +1,7 @@
 import * as styles from "./Quiz.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import { action, makeObservable, observable, reaction } from "mobx";
+import { action, makeObservable, observable, reaction, runInAction } from "mobx";
 import type { Question, QuizId, QuizType } from "../../../server/quiz/quiz.types";
 import { cssNames, disposer, IClassName } from "../../utils";
 import QuizIconSvg from "../../assets/icons/puzzle-piece-02.svg";
@@ -42,7 +42,7 @@ export class Quiz extends React.Component<QuizProps> {
     const disposer = reaction(() => params.get(), ({ quizId }) => {
       if (quizId === QUIZ_RANDOM_ID) {
         void this.redirectToRandomQuiz();
-      } else {
+      } else if (quizId) {
         void this.preloadQuiz(quizId);
       }
     }, {
@@ -52,14 +52,17 @@ export class Quiz extends React.Component<QuizProps> {
     this.disposer.push(disposer);
   }
 
-  // TODO: handle random quiz from new <Route> + redirect to quiz page
   async redirectToRandomQuiz() {
-    const availableQuiz = await quizRandomApi().request();
+    try {
+      const availableQuiz = await quizRandomApi().request();
 
-    if (availableQuiz) {
-      navigation.replace(
-        quizRoute.toURLPath({ quizId: availableQuiz.quizId })
-      );
+      if (availableQuiz) {
+        navigation.replace(
+          quizRoute.toURLPath({ quizId: availableQuiz.quizId })
+        );
+      }
+    } catch (err) {
+      runInAction(() => this.error = String(err));
     }
   }
 

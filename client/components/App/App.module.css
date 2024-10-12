@@ -27,6 +27,7 @@ input, select, textarea {
 
 a {
   color: var(--primary-red);
+  cursor: pointer;
 }
 
 /* generated div#app from main.tsx */

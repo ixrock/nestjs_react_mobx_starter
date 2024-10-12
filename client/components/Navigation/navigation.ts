@@ -2,7 +2,17 @@ import { createObservableHistory } from "mobx-observable-history";
 
 export const navigation = createObservableHistory();
 
-export type RouteHelper<Params> = ReturnType<typeof buildRoute<Params>>;
+export type RouteHelper<Params = object> = ReturnType<typeof buildRoute<Params>>;
+
+export function isRouteHelper<Params>(helper: unknown): helper is RouteHelper<Params> {
+  const validateKeys: (keyof RouteHelper<Params>)[] = ["routePath", "toURLPath", "getParams"];
+
+  return Boolean(
+    typeof helper === "object"
+    && helper !== null /* exclude weird "null" object */
+    && validateKeys.every(key => helper.hasOwnProperty(key)) /* validate fields somehow */
+  );
+}
 
 export function buildRoute<Params>(routePath: string, defaultParams: Partial<Params> = {}) {
   return {
@@ -27,6 +37,17 @@ export function buildRoute<Params>(routePath: string, defaultParams: Partial<Par
       });
 
       return parsedParams;
+    },
+
+    navigate(params?: Params, replace = false) {
+      const routeParams = Object.assign({}, defaultParams, params);
+      const path = this.toURLPath(routeParams);
+
+      if (replace) {
+        navigation.replace(path);
+      } else {
+        navigation.push(path);
+      }
     }
   };
 }

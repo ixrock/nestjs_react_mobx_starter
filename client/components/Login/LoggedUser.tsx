@@ -6,7 +6,7 @@ import { cssNames, IClassName } from "../../utils";
 import { action, makeObservable, observable } from "mobx";
 import { Icon } from "../Icon";
 import { saveApiToken } from "../../apis";
-import { loginRoute, navigation } from "../Navigation";
+import { loginRoute } from "../Navigation";
 import { logoutAppStore } from "../app-store";
 
 export interface UserProps {
@@ -34,7 +34,7 @@ export class LoggedUser extends React.Component<UserProps> {
     evt.stopPropagation();
     logoutAppStore();
     saveApiToken(""); // clear token
-    navigation.push(loginRoute.toURLPath()); // redirect to login page
+    loginRoute.navigate(); // redirect to login page
   }
 
   render() {

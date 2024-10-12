@@ -5,6 +5,7 @@ import LogoSvg from "../../assets/TalentAdoreLogo.svg";
 import { cssNames, IClassName } from "../../utils";
 import { LoggedUser } from "../Login";
 import { appStore } from "../app-store";
+import { homeRoute } from "../Navigation";
 
 export interface MainLayoutProps extends React.PropsWithChildren {
   className?: IClassName;
@@ -20,7 +21,9 @@ export class MainLayout extends React.Component<MainLayoutProps> {
     return (
       <div className={cssNames(styles.MainLayout, className)}>
         <div className={cssNames(styles.MainLayoutHeader, headerClass)}>
-          <a href="/"><img src={LogoSvg} height={40} alt="Logo" /></a>
+          <a onClick={() => homeRoute.navigate()}>
+            <img src={LogoSvg} height={40} alt="Logo" />
+          </a>
           <LoggedUser username={appStore.user?.username ?? "Unknown"} />
         </div>
         <div className={cssNames(styles.MainLayoutContent, contentClass)}>
