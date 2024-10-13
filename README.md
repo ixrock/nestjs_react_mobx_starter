@@ -50,7 +50,7 @@ POST /api/v1/user/quiz/:quizId/submit
 
 ## TODO / what's missing:
 
-- redirect to `/login` when fetching current user is failed or restricted apis failed _(e.g. token expired)_
+- redirect to `/login` for failed or restricted apis (401,403)?
 - submit quiz answers to backend endpoint 
 - show quiz result page after submitting quiz answers
 - improve quiz json mocks (add/generate more)

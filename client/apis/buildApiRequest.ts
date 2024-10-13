@@ -1,8 +1,15 @@
+import { EventEmitter } from "events";
 import { getApiToken } from "./apiToken.storage";
 
 export const API_BASE = "/api/v1";
+export const apiEvents = new EventEmitter<ApiEventsMap>();
 
-export type ApiJsonObject = object | string | number | boolean | null | undefined;
+export interface ApiEventsMap {
+  data: any[]; // get every valid api response data in this event
+  apiError: [ApiError]; // catch all api errors
+  authError: [ApiError]; // auth-errors only (401, 403)
+  jsonParseError: [SyntaxError];
+}
 
 export interface BuildApiParams {
   basePath: string;
@@ -16,7 +23,7 @@ export interface RequestApiParams {
   data?: BodyInit | ApiJsonObject;
 }
 
-export type ApiBuildHelper<Response> = ReturnType<typeof buildApiRequest<Response>>;
+export type ApiJsonObject = object | string | number | boolean | null | undefined;
 
 export function buildApiRequest<Response>(
   {
@@ -42,15 +49,33 @@ export function buildApiRequest<Response>(
         }
       });
 
+      // handle errors by status code before fetching body response stream
       const isError = response.status >= 400 && response.status < 600;
       const errorCode = isError ? response.status : 0;
 
       if (errorCode) {
         const error: ApiError = await response.json();
-        throw new ApiError(errorCode, error.message);
+        const apiError = new ApiError(errorCode, error.message);
+        if (errorCode === 401 || errorCode === 403) {
+          apiEvents.emit("authError", apiError);
+        }
+        apiEvents.emit("apiError", apiError);
+        throw apiError;
       }
 
-      return response.json();
+      // handle data response and possible parsing errors
+      try {
+        const data = await response.clone().json();
+        apiEvents.emit("data", data);
+        return data;
+      } catch (err: unknown) {
+        apiEvents.emit("jsonParseError", err as SyntaxError);
+        throw {
+          message: `Failed to parse JSON body: ${err}`,
+          statusCode: response.status,
+          response: await response.text()
+        };
+      }
     },
 
     cancel() {
