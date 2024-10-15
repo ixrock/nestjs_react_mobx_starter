@@ -1,8 +1,8 @@
 import * as styles from "./Quiz.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import { action, makeObservable, observable, reaction } from "mobx";
-import type { Question, QuizId, QuizType } from "../../../server/quiz/quiz.types";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
+import { AnswerType, Question, QuestionId, QuizId, QuizType } from "../../../server/quiz/quiz.types";
 import { cssNames, disposer, IClassName } from "../../utils";
 import QuizIconSvg from "../../assets/icons/puzzle-piece-02.svg";
 import { Icon } from "../Icon";
@@ -23,6 +23,25 @@ export class Quiz extends React.Component<QuizProps> {
   @observable.ref quiz?: QuizType;
   @observable isLoading = false;
   @observable error = "";
+  @observable answers: Record<QuestionId, string[]> = {};
+
+  @computed get questionsCount(): number {
+    return this.quiz?.questions.length ?? 0;
+  }
+
+  @computed get answeredQuestionsCount(): number {
+    return Object.values(this.answers)
+      .filter(answers => answers.length > 0)
+      .length;
+  }
+
+  @computed get remainQuestionsCount(): number {
+    return this.questionsCount - this.answeredQuestionsCount;
+  }
+
+  @computed get submitAllowed(): boolean {
+    return this.answeredQuestionsCount === this.questionsCount;
+  }
 
   constructor(props: QuizProps) {
     super(props);
@@ -63,23 +82,36 @@ export class Quiz extends React.Component<QuizProps> {
 
   renderQuestions(questions: Question[]) {
     return <>
-      {questions.map(({ id, question, choices }) => (
-        <div key={id} className={styles.question}>
-          <SubTitle>{question}</SubTitle>
-          <div className={styles.questionChoices}>
-            {Object.entries(choices).map(([choiceId, choice]) => {
-              return (
-                <Button
-                  key={choiceId}
-                  primary={true}
-                  className={styles.questionChoiceButton}
-                  label={choice}
-                />
-              );
-            })}
+      {questions.map((question) => {
+        const { id: questionId, question: questionTitle, choices, answerType } = question;
+
+        const multiChoiceIndicator = answerType === AnswerType.MULTIPLE
+          ? <span style={{ cursor: "help" }} title="Multiple choices are expected">*</span>
+          : "";
+
+        return (
+          <div key={questionId} className={styles.question}>
+            <SubTitle>{questionTitle}<big>{multiChoiceIndicator}</big></SubTitle>
+            <div className={styles.questionChoices}>
+              {Object.entries(choices).map(([choiceId, choice]) => {
+                const isSelected = this.answers[questionId]?.includes(choice);
+                const btnClassName = cssNames(styles.questionChoiceButton, {
+                  [styles.selectedChoice]: isSelected
+                });
+                return (
+                  <Button
+                    primary
+                    key={choiceId}
+                    label={choice}
+                    className={btnClassName}
+                    onClick={() => this.onAnswer(question, choice)}
+                  />
+                );
+              })}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </>;
   }
 
@@ -93,8 +125,38 @@ export class Quiz extends React.Component<QuizProps> {
     );
   }
 
+  @action.bound
+  onAnswer(question: Question, answer: string) {
+    this.answers[question.id] ??= [];
+
+    const answers = this.answers[question.id];
+    const existingAnswerIndex = answers.indexOf(answer);
+    const isFreshAnswer = existingAnswerIndex === -1;
+    const multipleChoices = question.answerType === AnswerType.MULTIPLE;
+
+    // toggle (remove previous choice)
+    if (!isFreshAnswer) {
+      answers.splice(existingAnswerIndex, 1);
+    } else {
+      // handle multiple and single choices
+      if (!multipleChoices) answers.length = 0;
+      answers.push(answer);
+    }
+  }
+
+  @action.bound
+  onSubmitQuiz() {
+    console.log("Submit quiz");
+  };
+
+  @action.bound
+  onEndQuiz() {
+    console.log("End quiz. Logout?");
+  };
+
   render() {
-    const { quiz, error } = this;
+    const { quiz, error, onEndQuiz, onSubmitQuiz, submitAllowed } = this;
+    const { answeredQuestionsCount, remainQuestionsCount, questionsCount } = this;
 
     if (!quiz) {
       if (error) return this.renderQuizNotAvailable();
@@ -111,17 +173,26 @@ export class Quiz extends React.Component<QuizProps> {
         </div>
 
         <div className={styles.progress}>
-          <ProgressLine className={styles.progressLine} min={1} max={4} value={2} />
+          <ProgressLine
+            className={styles.progressLine}
+            max={questionsCount}
+            value={answeredQuestionsCount}
+          />
           <div className={styles.progressRemainInfo}>
-            1/4 questions remain
+            {remainQuestionsCount}/{questionsCount} questions remain
           </div>
         </div>
 
         {this.renderQuestions(questions)}
 
         <div className={styles.quitOrContinue}>
-          <Button label="End quiz and exit" />
-          <Button label="&rarr; Continue quiz" primary />
+          <Button label="End quiz and exit" onClick={onEndQuiz} />
+          <Button
+            primary
+            label="&rarr; Submit quiz"
+            disabled={!submitAllowed}
+            onClick={onSubmitQuiz}
+          />
         </div>
       </div>
     );

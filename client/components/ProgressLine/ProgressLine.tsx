@@ -7,13 +7,18 @@ export type ProgressBarValue = `${string}%` | number /* int */;
 
 export interface ProgressLineProps {
   className?: IClassName;
-  min: ProgressBarValue;
-  max: ProgressBarValue;
+  min?: ProgressBarValue; // default: 1
+  max?: ProgressBarValue; // default: 100
   value: ProgressBarValue;
 }
 
 @observer
 export class ProgressLine extends React.Component<ProgressLineProps> {
+  static defaultProps = {
+    min: 1,
+    max: 100
+  } as ProgressLineProps;
+
   render() {
     const { className, min, max, value } = this.props;
 

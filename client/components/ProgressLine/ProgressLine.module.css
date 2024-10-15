@@ -10,4 +10,5 @@
   background: var(--gradient);
   height: inherit;
   border-radius: inherit;
+  transition: width 250ms ease-in-out;
 }

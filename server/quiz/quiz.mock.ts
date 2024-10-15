@@ -5,7 +5,7 @@ export default function generateQuizMock(
   {
     questionsNum = 4,
     choicesNum = 4,
-    maxPoints = 2,
+    points = 1, // per valid answer to question (?)
   } = {}): QuizType {
   return {
     quizId: faker.string.uuid(),
@@ -21,7 +21,7 @@ export default function generateQuizMock(
           return choices;
         }, {}),
         answerType: faker.helpers.enumValue(AnswerType),
-        points: faker.number.int(maxPoints)
+        points: faker.number.int(points)
       };
     })
   };

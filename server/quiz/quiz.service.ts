@@ -5,7 +5,7 @@ import generateQuizMock from "./quiz.mock";
 @Injectable()
 export class QuizService {
   private quizList: QuizType[] = [
-    generateQuizMock({ questionsNum: 3, maxPoints: 1 }),
+    generateQuizMock({ questionsNum: 2, choicesNum: 4 }),
     generateQuizMock({ questionsNum: 5, choicesNum: 3 }),
     generateQuizMock({ questionsNum: 3, choicesNum: 3 })
   ];

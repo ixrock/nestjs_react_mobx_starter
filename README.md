@@ -20,15 +20,15 @@ npm install
 3. Open in browser http://localhost:3000/login
 4. Login with any username and password == `admin` to get access token for restricted apis. 
 5. JWT-token (issued via `@nestjs/jwt`) stored in browser's session storage after successful login.
-5. After that you will be redirected `/quiz/random` and get `/quiz/1` _(serving mocked json from server)_.
+5. After that you will be redirected `/quiz/random` to get a quiz.
 
 ## Client routes.ts (react.js, mobx)
 
 - `/` app home page _(empty for now)_
 - `/login` - user login form page
 - `/quiz/random` - find random quiz and redirect to quiz page
-- `/quiz/1` - quiz page _(shows quiz response from server-api)_
-- `/quiz/1/result` - quiz result page _(empty for now)_
+- `/quiz/:quizId` - quiz page _(shows quiz from server-api)_
+- `/quiz/:quizId/result` - quiz result page _(empty for now)_
 
 ## Backend endpoints.apis.ts (nest.js)
 
@@ -43,16 +43,16 @@ POST /api/v1/user/quiz/:quizId/submit
 
 ## Some notes on taken decisions:
 
-- I used `nest.js` as part of learning process instead of `postman` apis _(Postman's APIS/docs also takes some time to master, so it's postponed :)_
-- I used custom router (see: `/client/components/Navigation/*`) built on top `mobx-observable-history` package since `mobx` is used for state-management the project. 
-- Alternative good choice of routing could be `react-router@6` if current router implementation cannot be refactored/upgraded to whatever needs the app, but the official `ReactRouter` can do. _(what i'm doubt about)_
-
+- I used `nest.js` as part of learning process instead of `Postman` _(time/effort more profitable, Postman can wait:)_
+- I used custom router as PoC for `mobx-observable-history` package (see: `/client/components/Navigation/*`) since I use already `mobx` for state management in the project.
 
 ## TODO / what's missing:
 
-- submit quiz answers to backend endpoint 
-- show quiz result page after submitting quiz answers
+- submit/handle quiz answers at backend side
+- show quiz results page after submitting quiz answers
+- abstract usage of global app store observable (via some class `StorageHelper`)
+- maybe handle ComponentRoute's dependent data-layer at routing level (e.g. preloading data for `/quiz/1` instead of manual handling, see: `Quiz.tsx`) / use global app store (via context?) to access data in components
+
 - add tests for backend services/endpoints via `@nestjs/testing`
 - add tests for frontend via React Testing Library (example in this [guide](https://keploy.io/blog/community/a-guide-to-testing-react-components-with-jest-and-react-testing-library)) for components and `jest` for unit-tests in `utils/*`
-- abstract usage of global app store observable (via some class `StorageHelper`)
-- handle ComponentRoute dependent data-layer at routing level (e.g. preloading data for `/quiz/1` instead of manual handling, see: `Quiz.tsx`) / use global app store (via context?) to access data in components 
+- add end-to-end tests, e.g. via [Playwright](https://playwright.dev/) or other library.
