@@ -111,9 +111,9 @@ export class Quiz extends React.Component<QuizProps> {
         </div>
 
         <div className={styles.progress}>
-          <ProgressLine className={styles.progressLine} min={1} max={4} value={questions.length} />
+          <ProgressLine className={styles.progressLine} min={1} max={4} value={2} />
           <div className={styles.progressRemainInfo}>
-            {questions.length}/4 questions remain
+            1/4 questions remain
           </div>
         </div>
 

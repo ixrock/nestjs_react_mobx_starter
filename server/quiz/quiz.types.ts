@@ -10,11 +10,16 @@ export interface QuizType {
   questions: Question[];
 }
 
+export enum AnswerType {
+  SINGLE = "SINGLE",
+  MULTIPLE = "MULTIPLE",
+}
+
 export interface Question {
   id: QuestionId;
   question: string;
   choices: Record<string, string>;
-  answerType: "SINGLE" | "MULTIPLE";
+  answerType: AnswerType;
   points: number;
 }
 

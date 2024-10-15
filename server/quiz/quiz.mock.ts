@@ -1,35 +1,28 @@
-import type { QuizType } from "./quiz.types";
+import { fakerEN as faker } from "@faker-js/faker";
+import { AnswerType, QuizType } from "./quiz.types";
 
-export const quizMock: QuizType = {
-  "quizId": "1",
-  "quizName": "Theme quiz test",
-  "imageUrl": "https://www.google.com",
-  "iconUrl": "https://www.google.com",
-  "questions": [
-    {
-      "id": "63280f8cf4a73e5f0e362086",
-      "question": "What do you call a person or an organization that lends money?",
-      "choices": {
-        "1": "Creditor",
-        "2": "Debtor",
-        "3": "Investor",
-        "4": "None of the above"
-      },
-      "answerType": "SINGLE",
-      "points": 1
-    }, {
-      "id": "62f219f8443d8a3ed1528a93",
-      "question": "Bitcoin is created as a reward for a process known as?",
-      "choices": {
-        "1": "Wallet",
-        "2": "Blockchain",
-        "3": "Mining",
-        "4": "Bubble"
-      },
-      "answerType": "SINGLE",
-      "points": 1
-    }
-  ]
-};
-
-export default quizMock;
+export default function generateQuizMock(
+  {
+    questionsNum = 4,
+    choicesNum = 4,
+    maxPoints = 2,
+  } = {}): QuizType {
+  return {
+    quizId: faker.string.uuid(),
+    quizName: faker.company.catchPhrase(),
+    imageUrl: faker.internet.url(),
+    iconUrl: faker.internet.url(),
+    questions: Array(questionsNum).fill(null).map(() => {
+      return {
+        id: faker.string.uuid(),
+        question: faker.lorem.sentences(2),
+        choices: Array(choicesNum).fill(null).reduce((choices, nothing, index) => {
+          choices[index + 1] = faker.lorem.word();
+          return choices;
+        }, {}),
+        answerType: faker.helpers.enumValue(AnswerType),
+        points: faker.number.int(maxPoints)
+      };
+    })
+  };
+}

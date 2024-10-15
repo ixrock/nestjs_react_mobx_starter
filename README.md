@@ -50,10 +50,8 @@ POST /api/v1/user/quiz/:quizId/submit
 
 ## TODO / what's missing:
 
-- redirect to `/login` for failed or restricted apis (401,403)?
 - submit quiz answers to backend endpoint 
 - show quiz result page after submitting quiz answers
-- improve quiz json mocks (add/generate more)
 - add tests for backend services/endpoints via `@nestjs/testing`
 - add tests for frontend via React Testing Library (example in this [guide](https://keploy.io/blog/community/a-guide-to-testing-react-components-with-jest-and-react-testing-library)) for components and `jest` for unit-tests in `utils/*`
 - abstract usage of global app store observable (via some class `StorageHelper`)

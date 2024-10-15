@@ -1,12 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { QuizAnswer, QuizId, QuizResultType, QuizSubmitDto, QuizType } from "./quiz.types";
-import quizMockJson from "./quiz.mock";
+import generateQuizMock from "./quiz.mock";
 
 @Injectable()
 export class QuizService {
-  // TODO: use some fake-data generator for quiz list or add more hardcoded to the mock list
-  // for the sake of simplicity we keep quiz list hardcoded here:
-  private quizList: QuizType[] = [quizMockJson];
+  private quizList: QuizType[] = [
+    generateQuizMock({ questionsNum: 3, maxPoints: 1 }),
+    generateQuizMock({ questionsNum: 5, choicesNum: 3 }),
+    generateQuizMock({ questionsNum: 3, choicesNum: 3 })
+  ];
 
   // for the sake of simplicity, we keep quiz results in memory:
   // in real world scenario this should be provided from a database, e.g. with "@nestjs/typeorm"
