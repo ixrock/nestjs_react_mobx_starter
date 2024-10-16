@@ -24,7 +24,7 @@ export class MainLayout extends React.Component<MainLayoutProps> {
           <a onClick={() => homeRoute.navigate()}>
             <img src={LogoSvg} height={40} alt="Logo" />
           </a>
-          <LoggedUser username={appStore.user?.username ?? "Unknown"} />
+          <LoggedUser username={appStore.user?.username} />
         </div>
         <div className={cssNames(styles.MainLayoutContent, contentClass)}>
           {children}

@@ -11,7 +11,7 @@ import { logoutAppStore } from "../app-store";
 
 export interface UserProps {
   className?: IClassName;
-  username: string;
+  username?: string;
 }
 
 @observer
@@ -48,13 +48,14 @@ export class LoggedUser extends React.Component<UserProps> {
     return (
       <div className={cssNames(styles.LoggedUser, className)} onClick={this.toggleMenu}>
         <Icon svgContent={UserIconSvg} className={styles.userIcon} />
-        <div className={styles.userName}>{username}</div>
+        <div className={styles.userName}>{username ?? "Unknown"}</div>
         <i className={arrowIconClass} />
 
         {this.isMenuOpen && (
           // in real-world scenario we would use separated component based on: <Menu>, <Dropdown> or <ReactSelect>
           <div className={styles.menu} onClick={this.logout}>
-            <a href="/logout">Logout</a>
+            {!username && <a href="/login">Login</a>}
+            {username && <a href="/logout">Logout</a>}
           </div>
         )}
       </div>
