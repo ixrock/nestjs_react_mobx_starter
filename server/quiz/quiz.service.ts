@@ -1,15 +1,15 @@
 import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
-import { QuizAnswer, QuizErrorMessage, QuizErrorStatus, QuizId, QuizResultType, QuizSubmitDto, QuizType } from "./quiz.types";
+import { QuizAnswer, QuizErrorMessage, QuizErrorStatus, QuizId, QuizResultDetail, QuizResultType, QuizSubmitDto, QuizType } from "./quiz.types";
 import generateQuizMock from "./quiz.mock";
 
 @Injectable()
 export class QuizService {
-  // generate 10 random quiz mocks
+  // generate quiz mocks
   private quizList: QuizType[] = Array.from({ length: 10 }).map(() => {
     return generateQuizMock({
       questionsNum: Math.floor(Math.random() * 3) + 2,
       choicesNum: Math.floor(Math.random() * 2) + 2,
-      points: Math.ceil(Math.random() * 3)
+      points: Math.ceil(Math.random() * 10)
     });
   });
 
@@ -42,29 +42,41 @@ export class QuizService {
       });
     }
 
-    // FIXME: fake score calculations
+    const resultDetails: QuizResultDetail[] = quiz.questions.map(({ id: questionId, choices, question, points }) => {
+      const { answers: questionAnswers } = answers.find(answer => answer.questionId === questionId);
+
+      // FIXME: fake correct answer generated on each request
+      const correctAnswer = String(Math.floor(Math.random() * Object.keys(choices).length));
+
+      return {
+        questionId,
+        question,
+        correctAnswer,
+        userAnswer: questionAnswers.join(", "),
+        isCorrect: questionAnswers.includes(correctAnswer)
+      };
+    });
+
+    const totalScore = quiz.questions.reduce((score, { points }) => score + points, 0);
+
+    const userScore = resultDetails.reduce((score, { questionId, isCorrect }) => {
+      const question = quiz.questions.find(({ id }) => id === questionId);
+      return score + (isCorrect ? question.points : 0);
+    }, 0);
+
     return {
       quizId,
       quizName: quiz.quizName,
-      totalScore: 100,
-      userScore: 50,
-      resultDetails: answers.map(({ questionId, answers }) => {
-        const question = quiz.questions.find(question => question.id === questionId);
-        return {
-          questionId,
-          question: question.question,
-          correctAnswer: "1",
-          userAnswer: answers.join(","),
-          isCorrect: true
-        };
-      })
+      totalScore,
+      userScore,
+      resultDetails
     };
   }
 
   async submitQuiz(userName: string, quizId: QuizId, payload: QuizSubmitDto): Promise<boolean> {
     const quizExists = Boolean(await this.findQuizBy(quizId));
 
-    // TODO: basic validation, better to move to guard or pipe probably
+    // TODO: basic validation, maybe better to move to guard or pipe
     if (!quizExists || !userName || !payload?.answers) {
       throw new BadRequestException({
         message: QuizErrorMessage.QUIZ_INVALID_PARAMS,
