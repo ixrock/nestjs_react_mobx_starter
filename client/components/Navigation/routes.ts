@@ -2,7 +2,6 @@ import type React from "react";
 import { IComputedValue } from "mobx";
 import type { QuizId } from "../../../server/quiz/quiz.types";
 import { buildRoute, RouteHelper } from "./navigation";
-import { QUIZ_RANDOM_ID } from "../Quiz/quiz.constants";
 
 export interface AppRoute<Params extends RouteParams = RouteParams> {
   route: RouteHelper<Params>;
@@ -33,6 +32,6 @@ export interface QuizResultRouteParams extends RouteParams {
 // Routes
 export const homeRoute = buildRoute("/");
 export const loginRoute = buildRoute<LoginRouteParams>("/login");
-export const quizRandomRoute = buildRoute(`/quiz/${QUIZ_RANDOM_ID}`);
+export const quizRandomRoute = buildRoute(`/quiz/random`);
 export const quizRoute = buildRoute<QuizRouteParams>("/quiz/:quizId");
 export const quizRouteResult = buildRoute<QuizResultRouteParams>("/quiz/:quizId/result");

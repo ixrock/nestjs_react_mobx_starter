@@ -2,7 +2,7 @@ import * as styles from "./Quiz.module.css";
 import React from "react";
 import { observer } from "mobx-react";
 import { action, computed, makeObservable, observable, reaction, runInAction } from "mobx";
-import { AnswerType, Question, QuestionId, QuizAnswer, QuizId, QuizType } from "../../../server/quiz/quiz.types";
+import { AnswerId, AnswerType, Question, QuestionId, QuizAnswer, QuizId, QuizType } from "../../../server/quiz/quiz.types";
 import { cssNames, disposer, IClassName } from "../../utils";
 import QuizIconSvg from "../../assets/icons/puzzle-piece-02.svg";
 import { Icon } from "../Icon";
@@ -18,13 +18,23 @@ export interface QuizProps extends RouteComponentParams<QuizRouteParams> {
 
 @observer
 export class Quiz extends React.Component<QuizProps> {
+  constructor(props: QuizProps) {
+    super(props);
+    makeObservable(this);
+    this.bindDataLoader();
+  }
+
   private disposer = disposer();
 
   @observable.ref quiz?: QuizType;
   @observable isLoading = false;
   @observable error = "";
   @observable submitError = "";
-  @observable answers: Record<QuestionId, string[]> = {};
+  @observable answers: Record<QuestionId, AnswerId[]> = {};
+
+  get quizId() {
+    return this.props.params.get().quizId;
+  }
 
   @computed get questionsCount(): number {
     return this.quiz?.questions.length ?? 0;
@@ -42,12 +52,6 @@ export class Quiz extends React.Component<QuizProps> {
 
   @computed get submitAllowed(): boolean {
     return this.answeredQuestionsCount === this.questionsCount;
-  }
-
-  constructor(props: QuizProps) {
-    super(props);
-    makeObservable(this);
-    this.bindDataLoader();
   }
 
   componentWillUnmount() {
@@ -95,7 +99,7 @@ export class Quiz extends React.Component<QuizProps> {
             <SubTitle>{questionTitle}<big>{multiChoiceIndicator}</big></SubTitle>
             <div className={styles.questionChoices}>
               {Object.entries(choices).map(([choiceId, choice]) => {
-                const isSelected = this.answers[questionId]?.includes(choice);
+                const isSelected = this.answers[questionId]?.includes(choiceId);
                 const btnClassName = cssNames(styles.questionChoiceButton, {
                   [styles.selectedChoice]: isSelected
                 });
@@ -105,7 +109,7 @@ export class Quiz extends React.Component<QuizProps> {
                     key={choiceId}
                     label={choice}
                     className={btnClassName}
-                    onClick={() => this.onAnswer(question, choice)}
+                    onClick={() => this.onAnswer(question, choiceId)}
                   />
                 );
               })}
@@ -118,21 +122,19 @@ export class Quiz extends React.Component<QuizProps> {
 
   // TODO: try to handle auth-errors from views at global level somehow
   renderQuizNotAvailable() {
-    const { quizId } = this.props.params.get();
-
     return (
       <div className={styles.QuizNotFound}>
-        Quiz <em>ID="{quizId}"</em> not available: {this.error}
+        Quiz <em>ID="{this.quizId}"</em> not available: {this.error}
       </div>
     );
   }
 
   @action.bound
-  onAnswer(question: Question, answer: string) {
+  onAnswer(question: Question, answerId: AnswerId) {
     this.answers[question.id] ??= [];
 
     const answers = this.answers[question.id];
-    const existingAnswerIndex = answers.indexOf(answer);
+    const existingAnswerIndex = answers.indexOf(answerId);
     const isFreshAnswer = existingAnswerIndex === -1;
     const multipleChoices = question.answerType === AnswerType.MULTIPLE;
 
@@ -142,7 +144,7 @@ export class Quiz extends React.Component<QuizProps> {
     } else {
       // handle multiple and single choices
       if (!multipleChoices) answers.length = 0;
-      answers.push(answer);
+      answers.push(answerId);
     }
   }
 
@@ -150,22 +152,20 @@ export class Quiz extends React.Component<QuizProps> {
   async onSubmitQuiz() {
     this.submitError = ""; // reset if any
     try {
-      const quizId = this.quiz?.quizId;
-      const answers: QuizAnswer[] = Object.entries(this.answers)
-        .map(([questionId, answers]) => ({
-          questionId,
-          answers: answers ?? []
-        }));
+      const answers: QuizAnswer[] = Object
+        .entries(this.answers)
+        .map(([questionId, answers]) => ({ questionId, answers }));
 
       // send data to server
-      await quizSubmitApi(quizId).request({
+      await quizSubmitApi(this.quizId).request({
         data: {
           answers
         }
       });
-
       // redirect to quiz result page in case of success
-      quizRouteResult.navigate({ quizId });
+      quizRouteResult.navigate({
+        quizId: this.quizId
+      });
     } catch (err: ApiError | any) {
       runInAction(() => {
         this.submitError = `Failed to submit quiz: ${err.message}`;
@@ -179,11 +179,13 @@ export class Quiz extends React.Component<QuizProps> {
   };
 
   render() {
-    const { quiz, error, onEndQuiz, onSubmitQuiz, submitAllowed, submitError } = this;
-    const { answeredQuestionsCount, remainQuestionsCount, questionsCount } = this;
+    const {
+      quiz, error, onEndQuiz, onSubmitQuiz, submitAllowed, submitError,
+      answeredQuestionsCount, remainQuestionsCount, questionsCount
+    } = this;
 
     if (!quiz) {
-      if (error) return this.renderQuizNotAvailable(); // auth-error
+      if (error) return this.renderQuizNotAvailable(); // e.g. auth-error or not found
       return "Loading quiz...";
     }
 
@@ -208,7 +210,7 @@ export class Quiz extends React.Component<QuizProps> {
         </div>
 
         <div className={styles.submitError}>
-          {this.submitError}
+          {submitError}
         </div>
 
         {this.renderQuestions(questions)}

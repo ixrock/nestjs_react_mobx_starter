@@ -1,6 +1,6 @@
 export type QuizId = string;
-
 export type QuestionId = string;
+export type AnswerId = string;
 
 export interface QuizType {
   quizId: QuizId;
@@ -18,7 +18,7 @@ export enum AnswerType {
 export interface Question {
   id: QuestionId;
   question: string;
-  choices: Record<string, string>;
+  choices: Record<AnswerId, string>;
   answerType: AnswerType;
   points: number;
 }
@@ -41,7 +41,7 @@ export interface QuizResultDetail {
 
 export interface QuizAnswer {
   questionId: QuestionId;
-  answers: string[];
+  answers: AnswerId[];
 }
 
 export interface QuizSubmitDto {

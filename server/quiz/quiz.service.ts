@@ -8,7 +8,8 @@ export class QuizService {
   private quizList: QuizType[] = Array.from({ length: 10 }).map(() => {
     return generateQuizMock({
       questionsNum: Math.floor(Math.random() * 3) + 2,
-      choicesNum: Math.floor(Math.random() * 2) + 1
+      choicesNum: Math.floor(Math.random() * 2) + 2,
+      points: Math.ceil(Math.random() * 3)
     });
   });
 
@@ -53,7 +54,7 @@ export class QuizService {
           questionId,
           question: question.question,
           correctAnswer: "1",
-          userAnswer: answers.join(", "),
+          userAnswer: answers.join(","),
           isCorrect: true
         };
       })

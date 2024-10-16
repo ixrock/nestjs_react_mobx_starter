@@ -14,9 +14,11 @@ export interface QuizResultProps extends RouteComponentParams<QuizResultRoutePar
 
 @observer
 export class QuizResult extends React.Component<QuizResultProps> {
+  public quizResult: QuizResultType;
+  public error = "";
+
   constructor(props: QuizResultProps) {
     super(props);
-
     makeObservable(this, {
       loadQuizResult: flow,
       quizResult: observable.ref,
@@ -24,15 +26,12 @@ export class QuizResult extends React.Component<QuizResultProps> {
     });
   }
 
-  public quizResult: QuizResultType;
-  public error = "";
-
   get quizId() {
     return this.props.params.get().quizId;
   }
 
   componentDidMount() {
-    this.loadQuizResult(); // preload
+    this.loadQuizResult();
   }
 
   * loadQuizResult() {
@@ -46,7 +45,7 @@ export class QuizResult extends React.Component<QuizResultProps> {
   renderQuizResultNotAvailable() {
     return (
       <div className={styles.QuizResultNotFound}>
-        Quiz <em>ID="{this.quizId}"</em> not available: {this.error}
+        Quiz <em>ID="{this.quizId}"</em> not available due: {this.error}
       </div>
     );
   }
@@ -55,10 +54,8 @@ export class QuizResult extends React.Component<QuizResultProps> {
     const { quizResult, error, props } = this;
 
     if (!quizResult) {
+      if (error) return this.renderQuizResultNotAvailable();
       return "Loading quiz result..";
-    }
-    if (error) {
-      return this.renderQuizResultNotAvailable();
     }
 
     return (
