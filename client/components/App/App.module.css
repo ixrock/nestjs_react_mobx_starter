@@ -25,6 +25,10 @@ input, select, textarea {
   }
 }
 
+pre {
+  overflow: auto;
+}
+
 a {
   color: var(--primary-red);
   cursor: pointer;

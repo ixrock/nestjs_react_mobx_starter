@@ -116,6 +116,7 @@ export class Quiz extends React.Component<QuizProps> {
     </>;
   }
 
+  // TODO: try to handle auth-errors from views at global level somehow
   renderQuizNotAvailable() {
     const { quizId } = this.props.params.get();
 

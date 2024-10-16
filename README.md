@@ -48,10 +48,9 @@ POST /api/v1/user/quiz/:quizId/submit
 
 ## TODO / what's missing:
 
-- submit/handle quiz answers at backend side
-- show quiz results page after submitting quiz answers
+- handle ComponentRoute's dependent data-layer at routing level (e.g. preloading data for `/quiz/1` instead of manual handling, see: `Quiz.tsx`) / use global app store (via context?) to access data in components
+
 - abstract usage of global app store observable (via some class `StorageHelper`)
-- maybe handle ComponentRoute's dependent data-layer at routing level (e.g. preloading data for `/quiz/1` instead of manual handling, see: `Quiz.tsx`) / use global app store (via context?) to access data in components
 
 - add tests for backend services/endpoints via `@nestjs/testing`
 - add tests for frontend via React Testing Library (example in this [guide](https://keploy.io/blog/community/a-guide-to-testing-react-components-with-jest-and-react-testing-library)) for components and `jest` for unit-tests in `utils/*`
