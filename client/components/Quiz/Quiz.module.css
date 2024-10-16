@@ -66,3 +66,16 @@
     font-weight: 700;
   }
 }
+
+.submitError {
+  text-align: center;
+  padding: var(--padding);
+  color: var(--primary-red);
+  background: rgba(from var(--primary-red) r g b / .25);
+  border: 1px solid rgba(from var(--primary-red) r g b / .5);
+  border-radius: var(--border-radius);
+
+  &:empty {
+    display: none;
+  }
+}

@@ -1,16 +1,16 @@
 import * as styles from "./Quiz.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import { action, computed, makeObservable, observable, reaction } from "mobx";
-import { AnswerType, Question, QuestionId, QuizId, QuizType } from "../../../server/quiz/quiz.types";
+import { action, computed, makeObservable, observable, reaction, runInAction } from "mobx";
+import { AnswerType, Question, QuestionId, QuizAnswer, QuizId, QuizType } from "../../../server/quiz/quiz.types";
 import { cssNames, disposer, IClassName } from "../../utils";
 import QuizIconSvg from "../../assets/icons/puzzle-piece-02.svg";
 import { Icon } from "../Icon";
 import { ProgressLine } from "../ProgressLine";
 import { Button } from "../Button";
 import { SubTitle } from "../SubTitle";
-import { QuizRouteParams, RouteComponentParams } from "../Navigation";
-import { quizApi } from "../../apis";
+import { QuizRouteParams, quizRouteResult, RouteComponentParams } from "../Navigation";
+import { ApiError, quizApi, quizSubmitApi } from "../../apis";
 
 export interface QuizProps extends RouteComponentParams<QuizRouteParams> {
   className?: IClassName;
@@ -23,6 +23,7 @@ export class Quiz extends React.Component<QuizProps> {
   @observable.ref quiz?: QuizType;
   @observable isLoading = false;
   @observable error = "";
+  @observable submitError = "";
   @observable answers: Record<QuestionId, string[]> = {};
 
   @computed get questionsCount(): number {
@@ -145,8 +146,30 @@ export class Quiz extends React.Component<QuizProps> {
   }
 
   @action.bound
-  onSubmitQuiz() {
-    console.log("Submit quiz");
+  async onSubmitQuiz() {
+    this.submitError = ""; // reset if any
+    try {
+      const quizId = this.quiz?.quizId;
+      const answers: QuizAnswer[] = Object.entries(this.answers)
+        .map(([questionId, answers]) => ({
+          questionId,
+          answers: answers ?? []
+        }));
+
+      // send data to server
+      await quizSubmitApi(quizId).request({
+        data: {
+          answers
+        }
+      });
+
+      // redirect to quiz result page in case of success
+      quizRouteResult.navigate({ quizId });
+    } catch (err: ApiError | any) {
+      runInAction(() => {
+        this.submitError = `Failed to submit quiz: ${err.message}`;
+      });
+    }
   };
 
   @action.bound
@@ -155,11 +178,11 @@ export class Quiz extends React.Component<QuizProps> {
   };
 
   render() {
-    const { quiz, error, onEndQuiz, onSubmitQuiz, submitAllowed } = this;
+    const { quiz, error, onEndQuiz, onSubmitQuiz, submitAllowed, submitError } = this;
     const { answeredQuestionsCount, remainQuestionsCount, questionsCount } = this;
 
     if (!quiz) {
-      if (error) return this.renderQuizNotAvailable();
+      if (error) return this.renderQuizNotAvailable(); // auth-error
       return "Loading quiz...";
     }
 
@@ -181,6 +204,10 @@ export class Quiz extends React.Component<QuizProps> {
           <div className={styles.progressRemainInfo}>
             {remainQuestionsCount}/{questionsCount} questions remain
           </div>
+        </div>
+
+        <div className={styles.submitError}>
+          {this.submitError}
         </div>
 
         {this.renderQuestions(questions)}

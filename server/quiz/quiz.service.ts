@@ -1,14 +1,16 @@
-import { Injectable } from "@nestjs/common";
-import { QuizAnswer, QuizId, QuizResultType, QuizSubmitDto, QuizType } from "./quiz.types";
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { QuizAnswer, QuizErrorMessage, QuizErrorStatus, QuizId, QuizResultType, QuizSubmitDto, QuizType } from "./quiz.types";
 import generateQuizMock from "./quiz.mock";
 
 @Injectable()
 export class QuizService {
-  private quizList: QuizType[] = [
-    generateQuizMock({ questionsNum: 2, choicesNum: 4 }),
-    generateQuizMock({ questionsNum: 5, choicesNum: 3 }),
-    generateQuizMock({ questionsNum: 3, choicesNum: 3 })
-  ];
+  // generate 10 random quiz mocks
+  private quizList: QuizType[] = Array.from({ length: 10 }).map(() => {
+    return generateQuizMock({
+      questionsNum: Math.floor(Math.random() * 3) + 2,
+      choicesNum: Math.floor(Math.random() * 2) + 1
+    });
+  });
 
   // for the sake of simplicity, we keep quiz results in memory:
   // in real world scenario this should be provided from a database, e.g. with "@nestjs/typeorm"
@@ -18,7 +20,7 @@ export class QuizService {
     return this.quizList.find(quiz => quiz.quizId === id);
   }
 
-  async findAvailableQuiz(userName: string): Promise<QuizType> {
+  async findRandomQuiz(userName: string): Promise<QuizType> {
     const answeredQuizIds = Object.keys(this.quizResultsPerUser[userName] || {});
     const availableQuizList = this.quizList.filter(quiz => !answeredQuizIds.includes(quiz.quizId));
 
@@ -32,7 +34,11 @@ export class QuizService {
     const answers = this.quizResultsPerUser[userName]?.[quizId];
 
     if (!quiz || !answers) {
-      return;
+      throw new NotFoundException({
+        message: QuizErrorMessage.QUIZ_RESULT_NOT_FOUND,
+        status: QuizErrorStatus.NOT_FOUND,
+        traceId: quizId
+      });
     }
 
     // FIXME: fake score calculations
@@ -54,13 +60,29 @@ export class QuizService {
     };
   }
 
-  async submitQuiz(userName: string, { quizId, answers }: QuizSubmitDto): Promise<boolean> {
+  async submitQuiz(userName: string, quizId: QuizId, payload: QuizSubmitDto): Promise<boolean> {
+    const quizExists = Boolean(await this.findQuizBy(quizId));
+
+    // TODO: basic validation, better to move to guard or pipe probably
+    if (!quizExists || !userName || !payload?.answers) {
+      throw new BadRequestException({
+        message: QuizErrorMessage.QUIZ_INVALID_PARAMS,
+        status: QuizErrorStatus.PRECONDITION_FAILED
+      });
+    }
+
     this.quizResultsPerUser[userName] ??= {};
 
     const userHasAnswersForTheQuiz = this.quizResultsPerUser[userName][quizId];
-    if (userHasAnswersForTheQuiz) return false;
+    if (userHasAnswersForTheQuiz) {
+      throw new HttpException({
+        status: QuizErrorStatus.PRECONDITION_FAILED,
+        message: QuizErrorMessage.QUIZ_ALREADY_TAKEN,
+        traceId: quizId
+      }, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
 
-    this.quizResultsPerUser[userName][quizId] = answers;
+    this.quizResultsPerUser[userName][quizId] = payload.answers;
     return true;
   }
 }

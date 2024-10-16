@@ -17,15 +17,15 @@ export interface BuildApiParams {
   method?: "GET" | "POST" | "PUT" | "DELETE";
 }
 
-export interface RequestApiParams {
+export interface RequestApiParams<RequestPayload = BodyInit | ApiJsonObject> {
   method?: "GET" | "POST" | "PUT" | "DELETE";
   headers?: HeadersInit;
-  data?: BodyInit | ApiJsonObject;
+  data?: RequestPayload;
 }
 
 export type ApiJsonObject = object | string | number | boolean | null | undefined;
 
-export function buildApiRequest<Response>(
+export function buildApiRequest<Response, RequestPayload = {}>(
   {
     method: defaultMethod = "GET",
     apiBase = API_BASE,
@@ -35,13 +35,13 @@ export function buildApiRequest<Response>(
   let abortController: AbortController;
 
   return {
-    async request({ method = defaultMethod, headers, data }: RequestApiParams = {}): Promise<Response> {
+    async request({ method = defaultMethod, headers, data }: RequestApiParams<RequestPayload> = {}): Promise<Response> {
       abortController = new AbortController();
 
       const response = await fetch(apiPath, {
         signal: abortController.signal,
         method,
-        body: isJsonData(data) ? JSON.stringify(data) : data,
+        body: isJsonData(data) ? JSON.stringify(data) : data as BodyInit,
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${getApiToken()}`,
@@ -97,7 +97,9 @@ export interface ApiError {
 
 export class ApiError extends Error {
   constructor(public statusCode: number, public message: string) {
-    super(`API Error (${statusCode}): ` + message);
+    const msg = `API exception (${statusCode}): ` + message;
+    super(msg);
+    this.message = msg;
     Error.captureStackTrace(this, new.target);
   }
 }

@@ -37,8 +37,8 @@ export function quizResultApi(quizId: QuizId) {
   });
 }
 
-export function quizSubmitApi<Data extends QuizSubmitDto>(quizId: QuizId) {
-  return buildApiRequest<Data>({
+export function quizSubmitApi(quizId: QuizId) {
+  return buildApiRequest<boolean, QuizSubmitDto>({
     method: "POST",
     basePath: `/user/quiz/${quizId}/submit`
   });

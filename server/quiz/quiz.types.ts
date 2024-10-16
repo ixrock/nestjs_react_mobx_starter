@@ -45,6 +45,17 @@ export interface QuizAnswer {
 }
 
 export interface QuizSubmitDto {
-  quizId: QuizId;
   answers: QuizAnswer[];
+}
+
+export enum QuizErrorMessage {
+  QUIZ_ALREADY_TAKEN = "QUIZ_ALREADY_TAKEN",
+  QUIZ_NOT_FOUND = "QUIZ_NOT_FOUND",
+  QUIZ_RESULT_NOT_FOUND = "QUIZ_RESULT_NOT_FOUND",
+  QUIZ_INVALID_PARAMS = "BAD_REQUEST",
+}
+
+export enum QuizErrorStatus {
+  PRECONDITION_FAILED = "PRECONDITION_FAILED",
+  NOT_FOUND = "NOT_FOUND",
 }
