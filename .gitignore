@@ -58,3 +58,8 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # TS
 tsconfig.*.tsbuildinfo
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
