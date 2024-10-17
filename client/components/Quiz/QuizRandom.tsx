@@ -1,37 +1,31 @@
 import React from "react";
-import { makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import { quizRoute, QuizRouteParams, RouteComponentParams } from "../Navigation";
-import { ApiError, quizRandomApi } from "../../apis";
+import { quizRoute, QuizRouteParams, RouteComponentParams, RouteStorePreload } from "../Navigation";
+import type { QuizType } from "../../../server/quiz/quiz.types";
 
-export interface QuizRandomProps extends RouteComponentParams<QuizRouteParams> {
+export interface QuizRandomProps extends RouteComponentParams<QuizRouteParams>, RouteStorePreload<QuizType> {
 }
 
 @observer
 export class QuizRandom extends React.Component<QuizRandomProps> {
-  @observable error = "";
-
-  constructor(props: QuizRandomProps) {
-    super(props);
-    makeObservable(this);
-    void this.redirectToRandomQuiz();
-  }
-
-  async redirectToRandomQuiz() {
-    try {
-      const availableQuiz = await quizRandomApi().request();
-
-      if (availableQuiz) {
-        quizRoute.navigate({ quizId: availableQuiz.quizId });
-      }
-    } catch (err: ApiError | unknown) {
-      runInAction(() => this.error = String(err));
+  redirectCheck() {
+    const { data: quiz } = this.props;
+    if (quiz) {
+      quizRoute.navigate({ quizId: quiz.quizId });
     }
   }
 
+  componentDidUpdate() {
+    this.redirectCheck();
+  }
+
+  async componentDidMount() {
+    this.redirectCheck();
+  }
+
   render() {
-    return (
-      <em>Quiz not available: {this.error}</em>
-    );
+    const { error, isLoading } = this.props;
+    if (error) return <em>Quiz not available: {String(error)}</em>;
+    if (isLoading) return <em>Obtaining random quiz...</em>;
   }
 }

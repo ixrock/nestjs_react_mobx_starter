@@ -7,7 +7,7 @@ import { action, makeObservable, observable } from "mobx";
 import { Icon } from "../Icon";
 import { saveApiToken } from "../../apis";
 import { loginRoute } from "../Navigation";
-import { logoutAppStore } from "../app-store";
+import { logoutAppStore } from "../app.store";
 
 export interface UserProps {
   className?: IClassName;

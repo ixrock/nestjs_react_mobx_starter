@@ -6,8 +6,16 @@ import { buildRoute, RouteHelper } from "./navigation";
 export interface AppRoute<Params extends RouteParams = RouteParams> {
   route: RouteHelper<Params>;
   Component: React.ComponentType<RouteComponentParams<Params>>;
-  noWrap?: boolean; // render inside app's root element
-  isDefault?: boolean; // default route when nothing is matched
+
+  // render inside app's root element
+  noWrap?: boolean;
+
+  // default route when nothing is matched
+  isDefault?: boolean;
+
+  // when specified provides data/error/loading state for active route,
+  // to get access from props extend with `RouteStore` interface.
+  preload?: (params: Params) => Promise<any>;
 }
 
 export interface RouteComponentParams<Params = object> {

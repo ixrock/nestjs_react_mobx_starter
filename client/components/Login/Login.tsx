@@ -7,7 +7,7 @@ import { Button } from "../Button";
 import type { AuthLoginDto, AuthLoginResponse } from "../../../server/auth/auth.types";
 import { homeRoute, RouteComponentParams } from "../Navigation";
 import { ApiError, authLoginApi, saveApiToken } from "../../apis";
-import { appStore } from "../app-store";
+import { appStore } from "../app.store";
 
 export interface LoginProps extends RouteComponentParams {
 }

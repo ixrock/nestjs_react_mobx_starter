@@ -1,88 +1,57 @@
 import * as styles from "./Quiz.module.css";
+
 import React from "react";
 import { observer } from "mobx-react";
-import { action, computed, makeObservable, observable, reaction, runInAction } from "mobx";
-import { AnswerId, AnswerType, Question, QuestionId, QuizAnswer, QuizId, QuizType } from "../../../server/quiz/quiz.types";
-import { cssNames, disposer, IClassName } from "../../utils";
+import { action, makeObservable, observable, runInAction } from "mobx";
+import { cssNames, IClassName } from "../../utils";
+import { QuizRouteParams, quizRouteResult, RouteComponentParams, RouteStorePreload } from "../Navigation";
+import { AnswerId, AnswerType, Question, QuestionId, QuizAnswer, QuizType } from "../../../server/quiz/quiz.types";
+import { ApiError, quizSubmitApi } from "../../apis";
 import QuizIconSvg from "../../assets/icons/puzzle-piece-02.svg";
 import { Icon } from "../Icon";
 import { ProgressLine } from "../ProgressLine";
 import { Button } from "../Button";
 import { SubTitle } from "../SubTitle";
-import { QuizRouteParams, quizRouteResult, RouteComponentParams } from "../Navigation";
-import { ApiError, quizApi, quizSubmitApi } from "../../apis";
 
-export interface QuizProps extends RouteComponentParams<QuizRouteParams> {
+export interface QuizProps
+  extends RouteComponentParams<QuizRouteParams>, RouteStorePreload<QuizType> {
   className?: IClassName;
 }
 
 @observer
 export class Quiz extends React.Component<QuizProps> {
+  @observable submitError = "";
+  @observable answers: Record<QuestionId, AnswerId[]> = {};
+
   constructor(props: QuizProps) {
     super(props);
     makeObservable(this);
-    this.bindDataLoader();
   }
-
-  private disposer = disposer();
-
-  @observable.ref quiz?: QuizType;
-  @observable isLoading = false;
-  @observable error = "";
-  @observable submitError = "";
-  @observable answers: Record<QuestionId, AnswerId[]> = {};
 
   get quizId() {
     return this.props.params.get().quizId;
   }
 
-  @computed get questionsCount(): number {
+  get quiz(): QuizType | undefined {
+    return this.props.data;
+  }
+
+  get questionsCount(): number {
     return this.quiz?.questions.length ?? 0;
   }
 
-  @computed get answeredQuestionsCount(): number {
+  get answeredQuestionsCount(): number {
     return Object.values(this.answers)
       .filter(answers => answers.length > 0)
       .length;
   }
 
-  @computed get remainQuestionsCount(): number {
+  get remainQuestionsCount(): number {
     return this.questionsCount - this.answeredQuestionsCount;
   }
 
-  @computed get submitAllowed(): boolean {
+  get submitAllowed(): boolean {
     return this.answeredQuestionsCount === this.questionsCount;
-  }
-
-  componentWillUnmount() {
-    this.disposer();
-  }
-
-  private bindDataLoader() {
-    const { params } = this.props;
-
-    const disposer = reaction(
-      () => params.get(),
-      ({ quizId }) => this.preloadQuiz(quizId),
-      {
-        delay: 100,
-        fireImmediately: true
-      }
-    );
-
-    this.disposer.push(disposer);
-  }
-
-  @action
-  preloadQuiz(quizId: QuizId) {
-    this.error = "";
-    this.isLoading = true;
-
-    // TODO: probably move handling Route related api data-layer to <Router> + use global state via `appStore`
-    return quizApi(quizId).request()
-      .then(action(quiz => this.quiz = quiz))
-      .catch(action(error => this.error = String(error)))
-      .finally(action(() => this.isLoading = false));
   }
 
   renderQuestions(questions: Question[]) {
@@ -120,11 +89,10 @@ export class Quiz extends React.Component<QuizProps> {
     </>;
   }
 
-  // TODO: try to handle auth-errors from views at global level somehow
   renderQuizNotAvailable() {
     return (
       <div className={styles.QuizNotFound}>
-        Quiz <em>ID="{this.quizId}"</em> not available: {this.error}
+        Quiz <em>ID="{this.quizId}"</em> not available due: {String(this.props.error)}
       </div>
     );
   }
@@ -180,13 +148,15 @@ export class Quiz extends React.Component<QuizProps> {
 
   render() {
     const {
-      quiz, error, onEndQuiz, onSubmitQuiz, submitAllowed, submitError,
+      props: { isLoading, error },
+      quiz, onEndQuiz, onSubmitQuiz, submitAllowed, submitError,
       answeredQuestionsCount, remainQuestionsCount, questionsCount
     } = this;
 
     if (!quiz) {
       if (error) return this.renderQuizNotAvailable(); // e.g. auth-error or not found
-      return "Loading quiz...";
+      if (isLoading) return "Loading quiz...";
+      return null;
     }
 
     const { quizName, questions } = quiz;

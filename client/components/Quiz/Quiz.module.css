@@ -52,12 +52,16 @@
 }
 
 .progress {
+  height: 5px;
   display: flex;
   align-items: center;
   gap: calc(var(--margin) * 2);
 
   .progressLine {
     flex: 1;
+    height: inherit;
+    outline: 1px solid var(--icons-border);
+    border-radius: var(--border-radius);
   }
 
   .progressRemainInfo {

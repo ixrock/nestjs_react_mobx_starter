@@ -1,7 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./components/App/App";
-import { initAppStore } from "./components/app-store";
+import { initAppStore } from "./components/app.store";
 
 export async function bootstrap() {
   // create DOM-element placeholder for the app

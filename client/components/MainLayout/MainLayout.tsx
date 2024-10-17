@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import LogoSvg from "../../assets/TalentAdoreLogo.svg";
 import { cssNames, IClassName } from "../../utils";
 import { LoggedUser } from "../Login";
-import { appStore } from "../app-store";
+import { appStore } from "../app.store";
 import { homeRoute } from "../Navigation";
 
 export interface MainLayoutProps extends React.PropsWithChildren {

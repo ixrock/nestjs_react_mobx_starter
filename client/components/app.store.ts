@@ -12,7 +12,7 @@ export async function initAppStore() {
   try {
     appStore.user = await getUserApi().request().catch(() => null);
   } catch (err) {
-    console.log("UNEXPECTED ERR", err);
+    console.error("UNEXPECTED ERR", err);
   }
 }
 

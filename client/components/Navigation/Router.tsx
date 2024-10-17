@@ -1,11 +1,13 @@
 import React from "react";
 import { computed, IComputedValue } from "mobx";
 import { observer } from "mobx-react";
-import { AppRoute, homeRoute, loginRoute, navigation, quizRandomRoute, quizRoute, quizRouteResult, RouteHelper, RouteParams } from "../Navigation";
+import { AppRoute, homeRoute, loginRoute, navigation, quizRandomRoute, QuizResultRouteParams, quizRoute, QuizRouteParams, quizRouteResult, RouteHelper, RouteParams } from "../Navigation";
+import { startAutoLoadRouteData, routeStore } from "./route.store";
+import { quizApi, quizRandomApi, quizResultApi } from "../../apis";
+import { MainLayout } from "../MainLayout";
+import { NotFound } from "../NotFound";
 import { Login } from "../Login";
 import { Quiz, QuizRandom, QuizResult } from "../Quiz";
-import { NotFound } from "../NotFound";
-import { MainLayout } from "../MainLayout";
 
 @observer
 export class Router extends React.Component {
@@ -14,12 +16,28 @@ export class Router extends React.Component {
   }
 
   static routes: AppRoute[] = [
-    { route: loginRoute, Component: Login, noWrap: true },
-
-    // should be declared above of quizRout with `/quiz/:quiz` since it has more specific path "/quiz/random"
-    { route: quizRandomRoute, Component: QuizRandom, isDefault: true },
-    { route: quizRoute, Component: Quiz },
-    { route: quizRouteResult, Component: QuizResult }
+    {
+      route: loginRoute,
+      Component: Login,
+      noWrap: true
+    },
+    {
+      // should be declared above of quizRout with `/quiz/:quiz` since it has more specific path "/quiz/random"
+      route: quizRandomRoute,
+      Component: QuizRandom,
+      isDefault: true,
+      preload: () => quizRandomApi().request()
+    },
+    {
+      route: quizRoute,
+      Component: Quiz,
+      preload: ({ quizId }: QuizRouteParams) => quizApi(quizId).request()
+    },
+    {
+      route: quizRouteResult,
+      Component: QuizResult,
+      preload: ({ quizId }: QuizResultRouteParams) => quizResultApi(quizId).request()
+    }
   ];
 
   static getDefaultRoute(): RouteHelper | undefined {
@@ -56,8 +74,10 @@ export class Router extends React.Component {
     }
   }
 
-  componentDidMount() {
+  constructor(props: {}) {
+    super(props);
     Router.homeRedirectCheck();
+    startAutoLoadRouteData();
   }
 
   componentDidUpdate() {
@@ -69,7 +89,8 @@ export class Router extends React.Component {
     const { route, Component, noWrap } = Router.getActiveRoute(currentLocation) || {} as AppRoute;
     const params = Router.getRouteParams(route);
     const notFoundContent = !route && <NotFound />;
-    const routeContent = route && <Component params={params} /> || notFoundContent;
+    const preloadResult = routeStore[route?.routePath] ?? {};
+    const routeContent = route && <Component params={params} {...preloadResult} /> || notFoundContent;
 
     if (noWrap) {
       return routeContent;

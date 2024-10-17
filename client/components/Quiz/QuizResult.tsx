@@ -1,68 +1,44 @@
 import * as styles from "./QuizResult.module.css";
+
 import React from "react";
 import { observer } from "mobx-react";
 import { cssNames, IClassName } from "../../utils";
-import { QuizResultRouteParams, RouteComponentParams } from "../Navigation";
-import { flow, makeObservable, observable } from "mobx";
+import { QuizResultRouteParams, RouteComponentParams, RouteStorePreload } from "../Navigation";
 import { QuizResultType } from "../../../server/quiz/quiz.types";
-import { ApiError, quizResultApi } from "../../apis";
 import { SubTitle } from "../SubTitle";
 
-export interface QuizResultProps extends RouteComponentParams<QuizResultRouteParams> {
+export interface QuizResultProps
+  extends RouteComponentParams<QuizResultRouteParams>, RouteStorePreload<QuizResultType> {
   className?: IClassName;
 }
 
 @observer
 export class QuizResult extends React.Component<QuizResultProps> {
-  public quizResult: QuizResultType;
-  public error = "";
-
-  constructor(props: QuizResultProps) {
-    super(props);
-    makeObservable(this, {
-      loadQuizResult: flow,
-      quizResult: observable.ref,
-      error: observable
-    });
-  }
-
-  get quizId() {
-    return this.props.params.get().quizId;
-  }
-
-  componentDidMount() {
-    this.loadQuizResult();
-  }
-
-  * loadQuizResult() {
-    try {
-      this.quizResult = yield quizResultApi(this.quizId).request();
-    } catch (err: ApiError | unknown) {
-      this.error = String(err);
-    }
-  }
-
   renderQuizResultNotAvailable() {
+    const { params, error } = this.props;
+    const { quizId } = params.get();
+
     return (
       <div className={styles.QuizResultNotFound}>
-        Quiz <em>ID="{this.quizId}"</em> not available due: {this.error}
+        Quiz Results for <em>ID="{quizId}"</em> not available due: {String(error)}
       </div>
     );
   }
 
   render() {
-    const { quizResult, error, props } = this;
+    const { data: quizResult, error, className, isLoading } = this.props;
 
     if (!quizResult) {
       if (error) return this.renderQuizResultNotAvailable();
-      return "Loading quiz result..";
+      if (isLoading) return "Loading quiz result..";
+      return null;
     }
 
     return (
-      <div className={cssNames(styles.QuizResult, props.className)}>
+      <div className={cssNames(styles.QuizResult, className)}>
         <SubTitle>Quiz results for "{quizResult.quizName}"</SubTitle>
 
-        <pre>{JSON.stringify(this.quizResult, null, 2)}</pre>
+        <pre>{JSON.stringify(quizResult, null, 2)}</pre>
       </div>
     );
   }
