@@ -1,6 +1,6 @@
-# TalentAdore - Developer Assignment
+# Modern and fast web-app bootstrap
 
-_Tech-stack: TypeScript, Nest.js, React.js, MobX, etc._
+_Main tech-stack: TypeScript, Nest.js, React.js, MobX_
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ _Tech-stack: TypeScript, Nest.js, React.js, MobX, etc._
 npm install
 ```
 
-## Demo running steps:
+## Example demo app running steps:
 
 1. `npm run server:start:dev` - compiles `dist/server/*` and run nest.js local server in dev-mode (watch).
 2. `npm run client:start:dev` - compiles `dist/client/*` files in dev-mode (watch).
@@ -37,16 +37,16 @@ POST /api/v1/auth/login
 GET /api/v1/auth/user
 GET /api/v1/user/quiz/random
 GET /api/v1/user/quiz/:quizId
-GET /api/v1/user/quiz/:quizId/result
+GET /ap i/v1/user/quiz/:quizId/result
 POST /api/v1/user/quiz/:quizId/submit
 ```
 
-## Some notes on taken decisions:
+## Some notes on taken decisions for frontend part:
 
-- I used `nest.js` as part of learning process instead of `Postman` _(time/effort more profitable, Postman can wait:)_
-- I used custom router as PoC for `mobx-observable-history` package (see: `/client/components/Navigation/*`) since I use already `mobx` for state management in the project.
+- I personally dislike the direction where React.JS went with hooks and functions (maybe it make sense in case of SSR-only, e.g. Next.js) and I don't think using classes is outdated or slow thing. In many cases it proved better readability and maintainability when properly utilized. When paired with MobX for state management it's becoming a charm and fully scalable.
+- I used custom router as PoC for `mobx-observable-history` package (see: `/client/components/Navigation/*`) since I use already `mobx` for state management in the project. Otherwise, standard `react-router-dom` would be recommended.
 
-## TODO / what's missing:
+## TODO / what's missing (feel free to contribute):
 
 - fix `nest build` server command
 - fix nest cli (e.g. `nest n service cats` creating in wrong folder)

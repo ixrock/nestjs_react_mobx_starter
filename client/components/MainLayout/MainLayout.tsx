@@ -1,7 +1,7 @@
 import * as styles from "./MainLayout.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import LogoSvg from "../../assets/TalentAdoreLogo.svg";
+import LogoSvg from "../../assets/LogoExample.svg";
 import { cssNames, IClassName } from "../../utils";
 import { LoggedUser } from "../Login";
 import { appStore } from "../app.store";
