@@ -2,7 +2,7 @@ import * as styles from "./Login.module.css";
 import React from "react";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import LogoSvg from "../../assets/TalentAdoreLogo.svg";
+import LogoSvg from "../../assets/LogoExample.svg";
 import { Button } from "../Button";
 import type { AuthLoginDto, AuthLoginResponse } from "../../../server/auth/auth.types";
 import { homeRoute, RouteComponentParams } from "../Navigation";

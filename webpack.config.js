@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const packageJson = require("./package.json");
 
 module.exports = function webpackConfig() {
   const isProduction = process.env.NODE_ENV === "production";
@@ -109,7 +110,7 @@ module.exports = function webpackConfig() {
 
     plugins: [
       new HtmlWebpackPlugin({
-        title: "TalentAdore assignment",
+        title: packageJson.description,
         inject: true
       }),
       new MiniCssExtractPlugin({ filename: "[name].css" })

@@ -1,9 +1,9 @@
 {
-  "name": "talentadore-assignment",
+  "name": "nestjs_react_mobx_starter",
   "version": "0.0.1",
-  "description": "Talent Adore assignment demo",
+  "description": "Full-stack project starter built on top of Nest.js (http api server), React.js (client render), MobX (state management), Webpack (builder)",
   "author": "romanesco.fin@gmail.com",
-  "private": true,
+  "private": false,
   "license": "MIT",
   "scripts": {
     "client:start:dev": "rm -rf dist/client && webpack --watch",
