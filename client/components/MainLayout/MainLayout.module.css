@@ -10,7 +10,7 @@
 .MainLayoutHeader {
   position: relative;
   background-color: #fff;
-  padding: var(--padding);
+  padding: var(--spacing);
   display: flex;
   justify-content: space-between;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -21,8 +21,8 @@
   position: relative;
   background-color: #fff;
   min-width: var(--main-content-min-width);
-  margin: var(--margin) 0;
-  padding: var(--margin);
+  margin: var(--spacingDouble) 0;
+  padding: var(--spacingDouble);
   border-radius: var(--border-radius);
   border: 1px solid var(--icons-border);
   grid-column: 2 / 3;

@@ -1,5 +1,5 @@
 
 .SubTitle {
-  padding: calc(var(--padding) * 1.5);
+  padding: calc(var(--spacing) * 1.5);
   background-color: var(--grey-background);
 }

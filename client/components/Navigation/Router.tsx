@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import { AppRoute, homeRoute, loginRoute, navigation, quizRandomRoute, QuizResultRouteParams, quizRoute, QuizRouteParams, quizRouteResult, RouteHelper, RouteParams } from "../Navigation";
 import { startAutoLoadRouteData, routeStore } from "./route.store";
 import { quizApi, quizRandomApi, quizResultApi } from "../../apis";
+import { ErrorBoundary } from "../ErrorBoundary";
 import { MainLayout } from "../MainLayout";
 import { NotFound } from "../NotFound";
 import { Login } from "../Login";
@@ -88,9 +89,14 @@ export class Router extends React.Component {
     const currentLocation = Router.getPath();
     const { route, Component, noWrap } = Router.getActiveRoute(currentLocation) || {} as AppRoute;
     const params = Router.getRouteParams(route);
-    const notFoundContent = !route && <NotFound />;
     const preloadResult = routeStore[route?.routePath] ?? {};
-    const routeContent = route && <Component params={params} {...preloadResult} /> || notFoundContent;
+
+    const routeContent = (
+      <ErrorBoundary noWrap={noWrap}>
+        {route && <Component params={params} {...preloadResult} />}
+        {!route && <NotFound />}
+      </ErrorBoundary>
+    );
 
     if (noWrap) {
       return routeContent;

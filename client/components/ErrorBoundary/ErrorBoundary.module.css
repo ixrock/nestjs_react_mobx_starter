@@ -1,0 +1,13 @@
+.ErrorBoundary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingDouble);
+  padding: var(--spacingDouble);
+  margin: auto;
+
+  &.noWrap {
+    /* add border in case when rendered directly in #app */
+    border: 1px solid var(--icons-border);
+    border-radius: var(--border-radius);
+  }
+}

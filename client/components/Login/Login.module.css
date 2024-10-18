@@ -3,8 +3,8 @@
   flex-direction: column;
   border: 1px solid var(--icons-border);
   border-radius: var(--border-radius);
-  gap: var(--margin);
-  padding: calc(var(--margin) * 2);
+  gap: var(--spacingDouble);
+  padding: calc(var(--spacingDouble) * 2);
   margin: auto;
   min-width: 300px;
   min-height: 300px;

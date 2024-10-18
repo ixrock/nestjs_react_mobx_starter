@@ -1,7 +1,7 @@
 .LoggedUser {
   display: flex;
   align-items: center;
-  gap: var(--padding);
+  gap: var(--spacing);
   cursor: pointer;
   user-select: none;
 
@@ -41,14 +41,14 @@
     position: absolute;
     right: 0;
     top: 100%;
-    margin: var(--padding);
+    margin: var(--spacing);
     border: 1px solid var(--icons-border);
     border-radius: 5px;
     z-index: 1; /* put above other parts of grid-layout */
 
     a {
       display: block;
-      padding: var(--padding);
+      padding: var(--spacing);
     }
   }
 }

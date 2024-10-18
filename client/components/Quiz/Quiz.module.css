@@ -1,7 +1,7 @@
 .Quiz {
   display: flex;
   flex-direction: column;
-  gap: var(--margin);
+  gap: var(--spacingDouble);
 }
 
 .QuizNotFound {
@@ -11,9 +11,9 @@
 .quizHeader {
   display: flex;
   align-items: center;
-  gap: var(--margin);
+  gap: var(--spacingDouble);
   border-bottom: 1px solid var(--icons-border);
-  padding-bottom: var(--margin);
+  padding-bottom: var(--spacingDouble);
 }
 
 .quizIcon {
@@ -27,13 +27,13 @@
 .question {
   display: flex;
   flex-direction: column;
-  gap: var(--margin);
-  margin: var(--padding) calc(var(--margin) * 1.5);
+  gap: var(--spacingDouble);
+  margin: var(--spacing) calc(var(--spacingDouble) * 1.5);
 
   .questionChoices {
     display: flex;
     justify-content: space-between;
-    gap: var(--margin);
+    gap: var(--spacingDouble);
   }
 
   .questionChoiceButton {
@@ -48,14 +48,14 @@
 .quitOrContinue {
   display: flex;
   justify-content: right;
-  gap: var(--margin);
+  gap: var(--spacingDouble);
 }
 
 .progress {
   height: 5px;
   display: flex;
   align-items: center;
-  gap: calc(var(--margin) * 2);
+  gap: calc(var(--spacingDouble) * 2);
 
   .progressLine {
     flex: 1;
@@ -73,7 +73,7 @@
 
 .submitError {
   text-align: center;
-  padding: var(--padding);
+  padding: var(--spacing);
   color: var(--primary-red);
   background: rgba(from var(--primary-red) r g b / .25);
   border: 1px solid rgba(from var(--primary-red) r g b / .5);

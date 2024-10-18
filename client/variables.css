@@ -1,7 +1,7 @@
 :root {
   /* Dimensions */
-  --padding: 10px;
-  --margin: 20px;
+  --spacing: 10px;
+  --spacingDouble: 20px;
   --font-size-small: 12px;
   --font-size-base: 15px;
   --font-size-big: 22px;

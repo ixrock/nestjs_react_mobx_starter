@@ -9,7 +9,7 @@
   background-color: white;
   color: var(--primary-red);
   border-radius: var(--border-radius);
-  padding: var(--padding);
+  padding: var(--spacing);
 
   &.primary {
     color: white;
