@@ -48,7 +48,6 @@ POST /api/v1/user/quiz/:quizId/submit
 
 ## TODO / what's missing (feel free to contribute):
 
-- fix `nest build` server command
 - fix nest cli (e.g. `nest n service cats` creating in wrong folder)
 - add tests for backend services/endpoints via `@nestjs/testing`
 - add tests for frontend via React Testing Library (example in this [guide](https://keploy.io/blog/community/a-guide-to-testing-react-components-with-jest-and-react-testing-library)) for components and `jest` for unit-tests in `utils/*`
