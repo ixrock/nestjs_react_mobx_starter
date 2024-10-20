@@ -8,13 +8,18 @@
   margin: auto;
   min-width: 300px;
   min-height: 300px;
-}
+  max-width: 350px;
 
-.authError {
-  font-size: var(--font-size-small);
-  color: var(--primary-red);
+  .authError {
+    font-size: var(--font-size-small);
+    color: var(--primary-red);
 
-  &:empty {
-    display: none;
+    &:empty {
+      display: none;
+    }
+  }
+
+  .logo {
+    margin: auto;
   }
 }

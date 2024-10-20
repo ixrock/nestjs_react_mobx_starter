@@ -8,10 +8,11 @@ export interface IconProps {
   svgContent: string; // base64 encoded data-url or plain <svg>*</svg> content
   className?: IClassName;
   big?: boolean;
+  onClick?(evt: React.MouseEvent): void;
 }
 
 export function Icon(props: IconProps) {
-  const { className, svgContent, big } = props;
+  const { className, svgContent, big, onClick } = props;
 
   const inlineSvg = svgContent.startsWith(inlineBase64Prefix)
     ? base64.decode(svgContent.replace(inlineBase64Prefix, ""))
@@ -19,6 +20,7 @@ export function Icon(props: IconProps) {
 
   return (
     <div
+      onClick={onClick}
       className={cssNames(styles.Icon, className, { [styles.big]: big })}
       dangerouslySetInnerHTML={{ __html: inlineSvg }}
     />

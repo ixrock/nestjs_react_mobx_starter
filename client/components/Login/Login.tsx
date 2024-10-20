@@ -2,12 +2,12 @@ import * as styles from "./Login.module.css";
 import React from "react";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import LogoSvg from "../../assets/LogoExample.svg";
 import { Button } from "../Button";
 import type { AuthLoginDto, AuthLoginResponse } from "../../../server/auth/auth.types";
 import { homeRoute, RouteComponentParams } from "../Navigation";
 import { ApiError, authLoginApi, saveApiToken } from "../../apis";
 import { appStore } from "../app.store";
+import { Logo } from "../Logo";
 
 export interface LoginProps extends RouteComponentParams {
 }
@@ -60,9 +60,7 @@ export class Login extends React.Component<LoginProps> {
   render() {
     return (
       <form className={styles.Login} onSubmit={this.onLogin}>
-        <a onClick={() => homeRoute.navigate()}>
-          <img src={LogoSvg} height={40} alt="Logo" />
-        </a>
+        <Logo className={styles.logo} />
         <input
           autoFocus
           name="username"

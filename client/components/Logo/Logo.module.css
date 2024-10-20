@@ -1,0 +1,8 @@
+.Logo {
+  --icon-size: 100px;
+
+  filter: hue-rotate(65deg);
+  max-height: 70px;
+  display: block;
+  cursor: pointer;
+}
