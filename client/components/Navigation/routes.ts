@@ -5,7 +5,7 @@ import { buildRoute, RouteHelper } from "./navigation";
 
 export interface AppRoute<Params extends RouteParams = RouteParams> {
   route: RouteHelper<Params>;
-  Component: React.ComponentType<RouteComponentParams<Params>>;
+  Component: React.ComponentType<RouteComponentParams<Params> | any>;
 
   // render inside app's root element
   noWrap?: boolean;

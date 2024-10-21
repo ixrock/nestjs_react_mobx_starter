@@ -1,0 +1,69 @@
+import React from "react";
+import { fireEvent, render } from "@testing-library/react";
+import type { AuthLoginResponse, LoggedUserPayload } from "../../../server/auth/auth.types";
+import { Login } from "./Login";
+import { ApiError } from "../../apis";
+import * as apis from "../../apis/endpoints.apis";
+import * as apiToken from "../../apis/apiToken.storage";
+import { appStore } from "../app.store";
+
+describe("Login component", () => {
+  let loginApiMock: jest.SpyInstance;
+  let saveApiTokenMock: jest.SpyInstance;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    loginApiMock = jest.spyOn(apis, "authLoginApi");
+    saveApiTokenMock = jest.spyOn(apiToken, "saveApiToken");
+  });
+
+  it("renders form", () => {
+    const { getByTestId } = render(<Login />);
+    expect(getByTestId(Login.dataTestId)).toBeInTheDocument();
+  });
+
+  it("form submit successful", async () => {
+    const { getByTestId, getByPlaceholderText } = render(<Login />);
+    const userInput = getByPlaceholderText(/username/i);
+    const passwordInput = getByPlaceholderText(/password/i);
+
+    expect(userInput).toBeInTheDocument();
+    expect(passwordInput).toBeInTheDocument();
+
+    fireEvent.input(userInput, { target: { value: "admin" } });
+    fireEvent.input(passwordInput, { target: { value: "he11o_world" } });
+
+    const requestMock = jest.fn(() => responseMock);
+    const responseMock: AuthLoginResponse = {
+      accessToken: "jwt-blablatoken"
+    };
+
+    // mocking real api calls before form submit
+    loginApiMock.mockReturnValue({ request: requestMock });
+    await fireEvent.submit(getByTestId(Login.dataTestId));
+
+    expect(requestMock).toHaveBeenCalledWith({
+      data: {
+        username: "admin",
+        password: "he11o_world"
+      }
+    });
+
+    expect(appStore.user).toEqual({ username: "admin" } as LoggedUserPayload);
+    expect(saveApiTokenMock).toHaveBeenCalledWith(responseMock.accessToken);
+  });
+
+  // FIXME
+  it.skip("form submit failed", async () => {
+    const { getByTestId, getByRole } = render(<Login />);
+    const submitBtn = getByRole("button", { name: /login/i });
+
+    const requestMock = jest.fn(() => Promise.reject(responseError));
+    const responseError = new ApiError(401, "Unauthorized");
+
+    loginApiMock.mockReturnValue({ request: requestMock });
+    await fireEvent.click(submitBtn);
+
+    expect(getByRole("error")).toContain("Login failed with 401 code: Unauthorized");
+  });
+});

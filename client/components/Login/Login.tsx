@@ -3,17 +3,19 @@ import React from "react";
 import { action, makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { Button } from "../Button";
-import type { AuthLoginDto, AuthLoginResponse } from "../../../server/auth/auth.types";
-import { homeRoute, RouteComponentParams } from "../Navigation";
-import { ApiError, authLoginApi, saveApiToken } from "../../apis";
-import { appStore } from "../app.store";
 import { Logo } from "../Logo";
+import type { AuthLoginDto, AuthLoginResponse } from "../../../server/auth/auth.types";
+import { ApiError, authLoginApi, saveApiToken } from "../../apis";
+import { homeRoute } from "../Navigation";
+import { appStore } from "../app.store";
 
-export interface LoginProps extends RouteComponentParams {
+export interface LoginProps {
 }
 
 @observer
 export class Login extends React.Component<LoginProps> {
+  static dataTestId = "login-form";
+
   constructor(props: LoginProps) {
     super(props);
     makeObservable(this);
@@ -59,7 +61,7 @@ export class Login extends React.Component<LoginProps> {
 
   render() {
     return (
-      <form className={styles.Login} onSubmit={this.onLogin}>
+      <form className={styles.Login} onSubmit={this.onLogin} data-testid={Login.dataTestId}>
         <Logo className={styles.logo} />
         <input
           autoFocus
@@ -74,7 +76,7 @@ export class Login extends React.Component<LoginProps> {
           value={this.password}
           onChange={action((evt) => this.password = evt.target.value)}
         />
-        <div className={styles.authError}>
+        <div className={styles.authError} role="error">
           {this.authError}
         </div>
         <Button

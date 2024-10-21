@@ -16,6 +16,8 @@ export interface UserProps {
 
 @observer
 export class LoggedUser extends React.Component<UserProps> {
+  static dataTestId = "logged-user";
+
   @observable isMenuOpen = false;
 
   constructor(props: UserProps) {
@@ -40,13 +42,13 @@ export class LoggedUser extends React.Component<UserProps> {
   render() {
     const { username, className } = this.props;
 
-    const arrowIconClass = cssNames(
-      styles.arrowIcon,
-      this.isMenuOpen ? styles.arrowUpIcon : styles.arrowDownIcon
-    );
+    const arrowIconClass = cssNames(styles.arrowIcon, {
+      [styles.arrowUpIcon]: this.isMenuOpen,
+      [styles.arrowDownIcon]: !this.isMenuOpen
+    });
 
     return (
-      <div className={cssNames(styles.LoggedUser, className)} onClick={this.toggleMenu} data-testid="user">
+      <div className={cssNames(styles.LoggedUser, className)} onClick={this.toggleMenu} data-testid={LoggedUser.dataTestId}>
         <Icon svgContent={UserIconSvg} className={styles.userIcon} />
         <div className={styles.userName}>{username ?? "Unknown"}</div>
         <i className={arrowIconClass} />

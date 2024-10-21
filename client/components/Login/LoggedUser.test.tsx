@@ -1,6 +1,7 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import { LoggedUser } from "./LoggedUser";
+import { loginRoute } from "../Navigation";
 
 describe("Logged user component", () => {
   it("shows logged-out when `username` is NOT provided", () => {
@@ -9,8 +10,7 @@ describe("Logged user component", () => {
     );
 
     expect(getByText("Unknown")).toBeInTheDocument();
-
-    fireEvent.click(getByTestId("user"));
+    fireEvent.click(getByTestId(LoggedUser.dataTestId));
     expect(queryByRole("login")).toBeInTheDocument();
     expect(queryByRole("logout")).not.toBeInTheDocument();
   });
@@ -21,9 +21,17 @@ describe("Logged user component", () => {
     );
 
     expect(getByText("Joe")).toBeInTheDocument();
-
-    fireEvent.click(getByTestId("user"));
+    fireEvent.click(getByTestId(LoggedUser.dataTestId));
     expect(queryByRole("login")).not.toBeInTheDocument();
     expect(queryByRole("logout")).toBeInTheDocument();
+  });
+
+  it("redirects to login page route when clicked from menu", () => {
+    const { getByTestId, queryByRole } = render(<LoggedUser />);
+
+    expect(location.pathname).toBe("/");
+    fireEvent.click(getByTestId(LoggedUser.dataTestId));
+    fireEvent.click(queryByRole("login"));
+    expect(location.pathname).toBe(loginRoute.toURLPath());
   });
 });
