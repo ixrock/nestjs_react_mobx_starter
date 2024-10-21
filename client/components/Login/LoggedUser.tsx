@@ -46,16 +46,16 @@ export class LoggedUser extends React.Component<UserProps> {
     );
 
     return (
-      <div className={cssNames(styles.LoggedUser, className)} onClick={this.toggleMenu}>
+      <div className={cssNames(styles.LoggedUser, className)} onClick={this.toggleMenu} data-testid="user">
         <Icon svgContent={UserIconSvg} className={styles.userIcon} />
         <div className={styles.userName}>{username ?? "Unknown"}</div>
         <i className={arrowIconClass} />
 
         {this.isMenuOpen && (
           // in real-world scenario we would use separated component based on: <Menu>, <Dropdown> or <ReactSelect>
-          <div className={styles.menu} onClick={this.logout}>
-            {!username && <a href="/login">Login</a>}
-            {username && <a href="/logout">Logout</a>}
+          <div className={styles.menu}>
+            {!username && <a onClick={() => loginRoute.navigate()} role="login">Login</a>}
+            {username && <a onClick={this.logout} role="logout">Logout</a>}
           </div>
         )}
       </div>
