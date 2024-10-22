@@ -141,15 +141,10 @@ export class Quiz extends React.Component<QuizProps> {
     }
   };
 
-  @action.bound
-  onEndQuiz() {
-    console.log("End quiz. Logout?");
-  };
-
   render() {
     const {
       props: { isLoading, error },
-      quiz, onEndQuiz, onSubmitQuiz, submitAllowed, submitError,
+      quiz, onSubmitQuiz, submitAllowed, submitError,
       answeredQuestionsCount, remainQuestionsCount, questionsCount
     } = this;
 
@@ -186,7 +181,6 @@ export class Quiz extends React.Component<QuizProps> {
         {this.renderQuestions(questions)}
 
         <div className={styles.quitOrContinue}>
-          <Button label="End quiz and exit" onClick={onEndQuiz} />
           <Button
             primary
             label="&rarr; Submit quiz"
