@@ -15,6 +15,7 @@ export interface LoginProps {
 @observer
 export class Login extends React.Component<LoginProps> {
   static dataTestId = "login-form";
+  static dataTestIdError = "login-error";
 
   constructor(props: LoginProps) {
     super(props);
@@ -39,7 +40,7 @@ export class Login extends React.Component<LoginProps> {
     saveApiToken(accessToken);
 
     // redirect to home page after successful sign-in
-    homeRoute.navigate({}, true);
+    homeRoute.redirect();
   }
 
   onLogin = async (evt: React.FormEvent) => {
@@ -76,7 +77,7 @@ export class Login extends React.Component<LoginProps> {
           value={this.password}
           onChange={action((evt) => this.password = evt.target.value)}
         />
-        <div className={styles.authError} role="error">
+        <div className={styles.authError} data-testid={Login.dataTestIdError}>
           {this.authError}
         </div>
         <Button

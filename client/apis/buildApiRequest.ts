@@ -97,9 +97,7 @@ export interface ApiError {
 
 export class ApiError extends Error {
   constructor(public statusCode: number, public message: string) {
-    const msg = `API exception (${statusCode}): ` + message;
-    super(msg);
-    this.message = msg;
+    super(message);
     Error.captureStackTrace(this, new.target);
   }
 }

@@ -48,6 +48,10 @@ export function buildRoute<Params>(routePath: string, defaultParams: Partial<Par
       } else {
         navigation.push(path);
       }
+    },
+
+    redirect(params?: Params) {
+      this.navigate(params, true);
     }
   };
 }
