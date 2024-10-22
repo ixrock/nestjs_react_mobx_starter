@@ -1,8 +1,7 @@
 import React from "react";
-import { computed, IComputedValue } from "mobx";
 import { observer } from "mobx-react";
 import { AppRoute, homeRoute, loginRoute, navigation, quizRandomRoute, QuizResultRouteParams, quizRoute, QuizRouteParams, quizRouteResult, RouteHelper, RouteParams } from "../Navigation";
-import { startAutoLoadRouteData, routeStore } from "./route.store";
+import { routeStore, startAutoLoadRouteData } from "./route.store";
 import { quizApi, quizRandomApi, quizResultApi } from "../../apis";
 import { ErrorBoundary } from "../ErrorBoundary";
 import { MainLayout } from "../MainLayout";
@@ -54,14 +53,13 @@ export class Router extends React.Component {
     });
   }
 
-  static getRouteParams<Params extends RouteParams>(route: RouteHelper<Params>): IComputedValue<Params> {
-    return computed(() => route.getParams(Router.getPath()));
+  static getRouteParams<Params extends RouteParams>(route: RouteHelper<Params>): Params {
+    return route.getParams(Router.getPath());
   }
 
   static redirect<Params extends RouteParams>(route: RouteHelper<Params>, params?: Params) {
     const path = route.toURLPath(params);
     navigation.replace(path);
-    return true;
   }
 
   static homeRedirectCheck() {
@@ -88,7 +86,7 @@ export class Router extends React.Component {
   render() {
     const currentLocation = Router.getPath();
     const { route, Component, noWrap } = Router.getActiveRoute(currentLocation) || {} as AppRoute;
-    const params = Router.getRouteParams(route);
+    const params = route ? Router.getRouteParams(route) : undefined;
     const preloadResult = routeStore[route?.routePath] ?? {};
 
     const routeContent = (

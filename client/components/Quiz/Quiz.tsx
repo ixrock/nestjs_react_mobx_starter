@@ -29,7 +29,7 @@ export class Quiz extends React.Component<QuizProps> {
   }
 
   get quizId() {
-    return this.props.params.get().quizId;
+    return this.props.params.quizId;
   }
 
   get quiz(): QuizType | undefined {

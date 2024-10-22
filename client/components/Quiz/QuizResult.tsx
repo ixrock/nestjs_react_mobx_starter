@@ -15,8 +15,7 @@ export interface QuizResultProps
 @observer
 export class QuizResult extends React.Component<QuizResultProps> {
   renderQuizResultNotAvailable() {
-    const { params, error } = this.props;
-    const { quizId } = params.get();
+    const { params: { quizId }, error } = this.props;
 
     return (
       <div className={styles.QuizResultNotFound}>

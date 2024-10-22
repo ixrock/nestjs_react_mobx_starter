@@ -5,7 +5,7 @@ export class NotFound extends React.Component {
   render() {
     return (
       <div className={styles.NotFound}>
-        404: Route not found
+        404: Page not found
       </div>
     );
   }

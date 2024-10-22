@@ -28,7 +28,7 @@ export const preloadRouteData = flow(function* (activeRoute: AppRoute) {
     routeStore[routePath].isLoading = true;
 
     try {
-      routeStore[routePath].data = yield preload(routeParams.get());
+      routeStore[routePath].data = yield preload(routeParams);
     } catch (err: ApiError | unknown) {
       routeStore[routePath].error = err;
     } finally {
