@@ -1,6 +1,6 @@
 import * as styles from "./Button.module.css";
 import React, { ButtonHTMLAttributes } from "react";
-import { cssNames } from "../../utils";
+import { cssNames } from "@/utils";
 
 export type ButtonElement = HTMLButtonElement /*| HTMLAnchorElement*/;
 

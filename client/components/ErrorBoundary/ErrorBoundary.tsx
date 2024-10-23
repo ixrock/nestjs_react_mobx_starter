@@ -3,10 +3,8 @@ import * as styles from "./ErrorBoundary.module.css";
 import React, { ErrorInfo, PropsWithChildren } from "react";
 import { observer } from "mobx-react";
 import { action, makeObservable, observable } from "mobx";
-import { cssNames, IClassName } from "../../utils";
-import { navigation } from "../Navigation";
-import { SubTitle } from "../SubTitle";
-import { Button } from "../Button";
+import { cssNames, IClassName } from "@/utils";
+import { navigation, SubTitle, Button } from "@/components";
 
 export interface ErrorBoundaryProps extends PropsWithChildren {
   className?: IClassName;

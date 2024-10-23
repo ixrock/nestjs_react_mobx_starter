@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { quizRoute, QuizRouteParams, RouteComponentParams, RouteStorePreload } from "../Navigation";
-import type { QuizType } from "../../../server/quiz/quiz.types";
+import { quizRoute, QuizRouteParams, RouteComponentParams, RouteStorePreload } from "@/components/Navigation";
+import type { QuizType } from "#/quiz/quiz.types";
 
 export interface QuizRandomProps extends RouteComponentParams<QuizRouteParams>, RouteStorePreload<QuizType> {
 }

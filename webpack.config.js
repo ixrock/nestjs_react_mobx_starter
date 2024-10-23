@@ -18,7 +18,6 @@ module.exports = function webpackConfig() {
       "app": entryFile
     },
     output: {
-      libraryTarget: "global",
       globalObject: "globalThis",
       publicPath: "/",
       path: distFolderPath,
@@ -37,6 +36,10 @@ module.exports = function webpackConfig() {
 
     resolve: {
       extensions: [".ts", ".tsx", ".js", ".json", ".scss", ".css", ".txt", ".md"],
+      alias: {
+        "@": path.resolve(__dirname, "client"),
+        "#": path.resolve(__dirname, "server")
+      },
       fallback: {
         // ignore browser polyfill warnings
         crypto: false,

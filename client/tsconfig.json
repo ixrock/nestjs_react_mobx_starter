@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "../",
     "rootDir": "../",
     "outDir": "../dist/client",
     "jsx": "react",
@@ -13,7 +14,11 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
-    "useDefineForClassFields": true
+    "useDefineForClassFields": true,
+    "paths": {
+      "@/*": ["./client/*"],
+      "#/*": ["./server/*"]
+    }
   },
   "exclude": [
     "node_modules"

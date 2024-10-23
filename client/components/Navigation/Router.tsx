@@ -1,13 +1,9 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { AppRoute, homeRoute, loginRoute, navigation, quizRandomRoute, QuizResultRouteParams, quizRoute, QuizRouteParams, quizRouteResult, RouteHelper, RouteParams } from "../Navigation";
-import { routeStore, startAutoLoadRouteData } from "./route.store";
-import { quizApi, quizRandomApi, quizResultApi } from "../../apis";
-import { ErrorBoundary } from "../ErrorBoundary";
-import { MainLayout } from "../MainLayout";
-import { NotFound } from "../NotFound";
-import { Login } from "../Login";
-import { Quiz, QuizRandom, QuizResult } from "../Quiz";
+import { quizApi, quizRandomApi, quizResultApi } from "@/apis";
+import { routeStore, startAutoLoadRouteData } from "@/components/Navigation";
+import { MainLayout, Login, NotFound, ErrorBoundary, Quiz, QuizRandom, QuizResult } from "@/components";
 
 @observer
 export class Router extends React.Component {

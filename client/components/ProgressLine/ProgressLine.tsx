@@ -1,7 +1,7 @@
 import * as styles from "./ProgressLine.module.css";
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames, IClassName } from "../../utils";
+import { cssNames, IClassName } from "@/utils";
 
 export type ProgressBarValue = `${string}%` | number /* int */;
 

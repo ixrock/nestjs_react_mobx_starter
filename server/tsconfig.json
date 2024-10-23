@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "../",
     "outDir": "../dist/server",
     "module": "commonjs",
     "declaration": true,
@@ -16,7 +17,10 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "#/*": ["./server/*"]
+    }
   },
   "exclude": [
     "node_modules"

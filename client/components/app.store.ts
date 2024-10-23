@@ -1,6 +1,6 @@
 import { observable } from "mobx";
-import { getUserApi } from "../apis";
-import type { LoggedUserPayload } from "../../server/auth/auth.types";
+import { getUserApi } from "@/apis";
+import type { LoggedUserPayload } from "#/auth/auth.types";
 
 export interface AppStore {
   user?: LoggedUserPayload;

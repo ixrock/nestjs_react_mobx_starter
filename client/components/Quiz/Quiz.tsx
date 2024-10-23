@@ -3,15 +3,12 @@ import * as styles from "./Quiz.module.css";
 import React from "react";
 import { observer } from "mobx-react";
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { cssNames, IClassName } from "../../utils";
-import { QuizRouteParams, quizRouteResult, RouteComponentParams, RouteStorePreload } from "../Navigation";
-import { AnswerId, AnswerType, Question, QuestionId, QuizAnswer, QuizType } from "../../../server/quiz/quiz.types";
-import { ApiError, quizSubmitApi } from "../../apis";
-import QuizIconSvg from "../../assets/icons/puzzle-piece-02.svg";
-import { Icon } from "../Icon";
-import { ProgressLine } from "../ProgressLine";
-import { Button } from "../Button";
-import { SubTitle } from "../SubTitle";
+import { AnswerId, AnswerType, Question, QuestionId, QuizAnswer, QuizType } from "#/quiz/quiz.types";
+import { QuizRouteParams, quizRouteResult, RouteComponentParams, RouteStorePreload } from "@/components/Navigation";
+import { Button, Icon, ProgressLine, SubTitle } from "@/components";
+import { cssNames, IClassName } from "@/utils";
+import { ApiError, quizSubmitApi } from "@/apis";
+import QuizIconSvg from "@/assets/icons/puzzle-piece-02.svg";
 
 export interface QuizProps
   extends RouteComponentParams<QuizRouteParams>, RouteStorePreload<QuizType> {
@@ -159,7 +156,7 @@ export class Quiz extends React.Component<QuizProps> {
     return (
       <div className={cssNames(styles.Quiz, this.props.className)}>
         <div className={styles.quizHeader}>
-          <Icon big svgContent={QuizIconSvg} className={styles.quizIcon} />
+          <Icon big source={QuizIconSvg} className={styles.quizIcon} />
           <h2>{quizName}</h2>
         </div>
 

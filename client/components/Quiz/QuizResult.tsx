@@ -2,10 +2,9 @@ import * as styles from "./QuizResult.module.css";
 
 import React from "react";
 import { observer } from "mobx-react";
-import { cssNames, IClassName } from "../../utils";
-import { QuizResultRouteParams, RouteComponentParams, RouteStorePreload } from "../Navigation";
-import { QuizResultType } from "../../../server/quiz/quiz.types";
-import { SubTitle } from "../SubTitle";
+import { cssNames, IClassName } from "@/utils";
+import { QuizResultType } from "#/quiz/quiz.types";
+import { QuizResultRouteParams, RouteComponentParams, RouteStorePreload, SubTitle } from "@/components";
 
 export interface QuizResultProps
   extends RouteComponentParams<QuizResultRouteParams>, RouteStorePreload<QuizResultType> {

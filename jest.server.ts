@@ -4,6 +4,9 @@ export default async function JestServerConfig(): Promise<Config> {
   return {
     rootDir: "./server",
     testEnvironment: "node",
+    moduleNameMapper: {
+      "^#/(.*?)$": "<rootDir>/$1"
+    },
     moduleFileExtensions: [
       "js",
       "json",

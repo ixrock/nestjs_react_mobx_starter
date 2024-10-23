@@ -1,5 +1,5 @@
 import { autorun, flow, observable } from "mobx";
-import type { ApiError } from "../../apis";
+import type { ApiError } from "@/apis";
 import { Router } from "./Router";
 import { AppRoute } from "./routes";
 

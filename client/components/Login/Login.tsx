@@ -4,9 +4,9 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
 import { Button } from "../Button";
 import { Logo } from "../Logo";
-import type { AuthLoginDto, AuthLoginResponse } from "../../../server/auth/auth.types";
-import { ApiError, authLoginApi, saveApiToken } from "../../apis";
-import { homeRoute } from "../Navigation";
+import type { AuthLoginDto, AuthLoginResponse } from "#/auth/auth.types";
+import { ApiError, authLoginApi, saveApiToken } from "@/apis";
+import { homeRoute } from "@/components/Navigation";
 import { appStore } from "../app.store";
 
 export interface LoginProps {
