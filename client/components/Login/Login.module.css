@@ -20,6 +20,7 @@
   }
 
   .logo {
+    --icon-size: 100px;
     margin: auto;
   }
 }

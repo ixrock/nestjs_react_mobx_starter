@@ -1,8 +1,24 @@
 .Logo {
-  --icon-size: 100px;
+  --icon-size: 40px; /*default logo size*/
 
   filter: hue-rotate(65deg);
+  transition: transform 50ms ease-in-out;
   max-height: 70px;
   display: block;
   cursor: pointer;
+
+  &:hover {
+    animation: hueRotateSpin .75s ease infinite;
+  }
+}
+
+@keyframes hueRotateSpin {
+  0% {
+    transform: rotate(0deg);
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    filter: hue-rotate(360deg);
+  }
 }
